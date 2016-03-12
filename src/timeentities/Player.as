@@ -1,0 +1,130 @@
+package timeentities
+{
+	import net.flashpunk.FP;
+	import net.flashpunk.graphics.Image;
+	import net.flashpunk.utils.Input;
+	/**
+	 * ...
+	 * @author Bret Hudson
+	 */
+	public class Player extends TimeEntity
+	{
+		
+		protected static const STATE_XSPEED:int = NUM_BASE_STATES + 0;
+		protected static const STATE_YSPEED:int = NUM_BASE_STATES + 1;
+		
+		private var xspeed:Number = 0;
+		private var yspeed:Number = 0;
+		
+		private var aspeed:Number = 0.5;
+		private var fspeed:Number = 0.5;
+		private var mspeed:Number = 2.0;
+		
+		private var gspeed:Number = 0.2;
+		private var jspeed:Number = -4.0;
+		
+		[Embed(source = "../assets/gfx/player.png")]
+		private const SPRITE:Class;
+		
+		public function Player(x:int, y:int, numIntervals:int) 
+		{
+			super(x, y, numIntervals);
+			
+			sprite = new Image(SPRITE);
+			graphic = sprite;
+			
+			// TODO: Make this correct
+			setHitbox(16, 16);
+			
+			states.push(new TimeState(numIntervals, true)); // XSPEED
+			states.push(new TimeState(numIntervals, true)); // YSPEED
+			
+			name = "player";
+			
+			recordState(0);
+		}
+		
+		// TODO: Jump input buffering!
+		override public function update():void 
+		{
+			// Input
+			var hdir:int = int(Input.check("right")) - int(Input.check("left"));
+			
+			// Horizontal movement
+			if (hdir != 0)
+				xspeed = FP.clamp(xspeed + hdir, -mspeed, mspeed);
+			else 
+				xspeed -= fspeed * FP.sign(xspeed);
+			
+			// Apply gravity
+			if ((yspeed < 0) && (!Input.check("jump")))
+				yspeed += gspeed;
+			yspeed += gspeed;
+			
+			// Jump
+			if ((Input.pressed("jump")) &&
+			((collide("solid", x, y + 1)) || (y + height >= Level.GAME_HEIGHT)))
+				yspeed = jspeed;
+			
+			// Movement
+			var xabs:int = Math.abs(xspeed);
+			var xdir:int = FP.sign(xspeed);
+			for (var xx:int = 0; xx < xabs; ++xx)
+			{
+				if (!collide("solid", x + xdir, y))
+					x += xdir;
+				else
+				{
+					xspeed = 0;
+					break;
+				}
+			}
+			
+			var yabs:int = Math.abs(yspeed);
+			var ydir:int = FP.sign(yspeed);
+			for (var yy:int = 0; yy < yabs; ++yy)
+			{
+				// TODO: Remove the second check
+				if ((!collide("solid", x, y + ydir)) && (y + ydir + height <= Level.GAME_HEIGHT))
+					y += ydir;
+				else
+				{
+					yspeed = 0;
+					break;
+				}
+			}
+		}
+		
+		override public function recordState(frame:int):Boolean 
+		{
+			// TODO: Set frame = internalEnterCount * 60
+			
+			var success:Boolean = super.recordState(frame);
+			
+			if (states.length > NUM_BASE_STATES)
+			{
+				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))	success = false;
+				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))	success = false;
+			}
+			
+			return success;
+		}
+		
+		override public function playback(frame:int):void 
+		{
+			super.playback(frame);
+			
+			xspeed = states[STATE_XSPEED].playbackNumber(frame);
+			yspeed = states[STATE_YSPEED].playbackNumber(frame);
+		}
+		
+		override public function render():void 
+		{
+			//sprite.drawMask = Effects.paradoxLines;
+			//sprite.color = 0x00FF4444;
+			super.render();
+		}
+		
+	}
+
+}

@@ -29,7 +29,7 @@ package
 		public function recordInt(frame:int, value:int):Boolean
 		{
 			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
-			if ((states[frame] != int.MIN_VALUE) && (states[frame] != value))
+			if ((states[frame] > int.MIN_VALUE) && (states[frame] != value))
 				return false;
 			
 			states[frame] = value;
@@ -39,7 +39,7 @@ package
 		public function recordNumber(frame:int, value:Number):Boolean
 		{
 			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
-			if ((states[frame] != Number.MIN_VALUE) && (states[frame] != value))
+			if ((states[frame] > int.MIN_VALUE) && (states[frame] != value))
 				return false;
 			
 			states[frame] = value;
@@ -48,11 +48,19 @@ package
 		
 		public function playbackInt(frame:int):int
 		{
+			while ((states[frame] == Number.MIN_VALUE) || (states[frame] == int.MIN_VALUE))
+			{
+				frame -= FRAMES_PER_INTERVAL;
+			}
 			return states[frame];
 		}
 		
 		public function playbackNumber(frame:int):Number
 		{
+			while ((states[frame] == Number.MIN_VALUE) || (states[frame] == int.MIN_VALUE))
+			{
+				frame -= FRAMES_PER_INTERVAL;
+			}
 			return states[frame];
 		}
 		

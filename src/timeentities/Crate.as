@@ -1,4 +1,4 @@
-package  
+package timeentities
 {
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
@@ -12,16 +12,18 @@ package
 			
 			// TODO: Put other things here!
 			
+			name = "crate";
+			
 			recordState(0);
 		}
 		
 		override public function update():void 
 		{
 			//if (Input.mousePressed)
-			
+			++x;
 			{
-				x = Input.mouseX;
-				y = Input.mouseY;
+				//x = Input.mouseX - 24;
+				//y = Input.mouseY - 24;
 			}
 		}
 		
