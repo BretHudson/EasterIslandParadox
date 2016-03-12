@@ -6,9 +6,9 @@ package
 	public class Crate extends TimeEntity
 	{
 		
-		public function Crate(x:int, y:int, numStates:int) 
+		public function Crate(x:int, y:int, numIntervals:int) 
 		{
-			super(x, y, numStates);
+			super(x, y, numIntervals);
 			
 			// TODO: Put other things here!
 			
@@ -18,6 +18,7 @@ package
 		override public function update():void 
 		{
 			//if (Input.mousePressed)
+			
 			{
 				x = Input.mouseX;
 				y = Input.mouseY;
@@ -26,7 +27,7 @@ package
 		
 		override public function render():void 
 		{
-			Draw.rectPlus(x, y, 20, 20, 0xFF00FF);
+			Draw.rectPlus(x, y, 20, 20, 0xFFFFFF);
 		}
 		
 		override public function recordState(frame:int):Boolean 

@@ -12,9 +12,11 @@ package
 		
 		public function Main():void 
 		{
-			super(800, 600, 60, false);
+			super(400, 300, 60, false);
 			
-			FP.console.enable();
+			FP.screen.scale = 2;
+			
+			//FP.console.enable();
 			
 			FP.world = new Level();
 		}
