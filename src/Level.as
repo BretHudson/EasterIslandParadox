@@ -1,5 +1,6 @@
 package  
 {
+	import flash.display.InteractiveObject;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
@@ -12,9 +13,13 @@ package
 		private var intervalsEntered:Vector.<int>;
 		// TODO: private var intervalEnterOrder:Vector.<int>;
 		
-		public var curInterval:int = 0;
-		
 		private var timeEntities:Vector.<TimeEntity>;
+		
+		public var curInterval:int = 0;
+		public var curFrame:int = 0;
+		public var recording:Boolean = false;
+		public var playbackSpeed:int = 0;
+		public var playFrame:int = 0;
 		
 		public function Level() 
 		{
@@ -26,39 +31,54 @@ package
 			
 			timeEntities = new Vector.<TimeEntity>();
 			
-			addTimeEntity(new Crate(20, 20, numIntervals));
+			addTimeEntity(new Crate(20, 20, numIntervals)).active;
 		}
 		
 		public function addTimeEntity(e:TimeEntity):TimeEntity
 		{
 			add(e);
 			timeEntities.push(e);
+			e.active = false;
 			return e;
 		}
 		
-		public function startInterval(n:int):void
+		public function beginRecording():void
 		{
-			intervalsEntered[n] = 1;
+			recording = true;
+			curFrame = curInterval * TimeState.FRAMES_PER_INTERVAL;
+			
+			intervalsEntered[curInterval] = 1;
 			
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
-				if (!timeEntities[i].startInterval(n))
-				{
-					trace(timeEntities[999999].active);
-				}
+				timeEntities[i].active = true;
 			}
 		}
 		
-		public function endInterval(n:int):void
+		public function recordState():void
 		{
-			intervalsEntered[n] = 2;
+			for (var i:int = 0; i < timeEntities.length; ++i)
+			{
+				timeEntities[i].recordState(curFrame);
+			}
+			
+			++curFrame;
+			
+			if (curFrame % TimeState.FRAMES_PER_INTERVAL == 0)
+			{
+				endRecording();
+			}
+		}
+		
+		public function endRecording():void
+		{
+			recording = false;
+			
+			intervalsEntered[curInterval] = 2;
 			
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
-				if (!timeEntities[i].endInterval(n))
-				{
-					trace(timeEntities[999999].active);
-				}
+				timeEntities[i].active = false;
 			}
 		}
 		
@@ -71,7 +91,35 @@ package
 			
 			curInterval = (curInterval + numIntervals) % numIntervals;
 			
-			if (Input.pressed(Key.A))
+			if (Input.pressed(Key.ENTER))
+			{
+				beginRecording();
+			}
+			
+			if (recording)
+			{
+				recordState();
+			}
+			
+			if (Input.pressed(Key.P))
+			{
+				playbackSpeed = Math.abs(playbackSpeed - 1);
+				curFrame = 0;
+			}
+			
+			if (playbackSpeed != 0)
+			{
+				curFrame %= TimeState.FRAMES_PER_INTERVAL;
+				
+				for (var i:int = 0; i < timeEntities.length; ++i)
+				{
+					timeEntities[i].playback(curFrame + TimeState.FRAMES_PER_INTERVAL * curInterval);
+				}
+				
+				curFrame += playbackSpeed;
+			}
+			
+			/*if (Input.pressed(Key.A))
 			{
 				startInterval(curInterval);
 			}
@@ -79,7 +127,7 @@ package
 			if (Input.pressed(Key.S))
 			{
 				endInterval(curInterval);
-			}
+			}*/
 		}
 		
 		override public function render():void 
@@ -104,6 +152,32 @@ package
 					Draw.rectPlus(20 + 120 * i, 520, 100, 50, 0x00FF00, alpha);
 			}
 		}
+		
+		/*public function startInterval(n:int):void
+		{
+			intervalsEntered[n] = 1;
+			
+			for (var i:int = 0; i < timeEntities.length; ++i)
+			{
+				if (!timeEntities[i].startInterval(n))
+				{
+					trace(timeEntities[999999].active);
+				}
+			}
+		}
+		
+		public function endInterval(n:int):void
+		{
+			intervalsEntered[n] = 2;
+			
+			for (var i:int = 0; i < timeEntities.length; ++i)
+			{
+				if (!timeEntities[i].endInterval(n))
+				{
+					trace(timeEntities[999999].active);
+				}
+			}
+		}*/
 		
 	}
 

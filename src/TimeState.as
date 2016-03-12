@@ -4,30 +4,59 @@ package
 	public class TimeState 
 	{
 		
-		// Values at beginning of each interval
-		private var start:Vector.<int>;
+		public static const FRAMES_PER_INTERVAL:int = 60;
 		
-		// Amount of change during interval
-		private var delta:Vector.<int>;
+		// Values at beginning of each interval
+		private var states:Array;
 		
 		// If it can only be changed once (IE a crate breaking)
 		private var oneTime:Boolean;
 		
-		public function TimeState(num:int, initialValue:int, oneTime:Boolean = false)
+		public function TimeState(numIntervals:int, isInt:Boolean, oneTime:Boolean = false)
 		{
-			start = new Vector.<int>();
-			delta = new Vector.<int>();
+			var frameCount:int = numIntervals * FRAMES_PER_INTERVAL;
 			
-			while (num--)
+			states = new Array(frameCount);
+			
+			for (var i:int = 0; i < frameCount; ++i)
 			{
-				start.push(initialValue);
-				delta.push(int.MIN_VALUE);
+				states[i] = ((isInt) ? int.MIN_VALUE : Number.MIN_VALUE);
 			}
 			
 			this.oneTime = oneTime;
 		}
 		
-		public function startInterval(n:int):int
+		public function recordInt(frame:int, value:int):Boolean
+		{
+			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
+			if ((states[frame] != int.MIN_VALUE) && (states[frame] != value))
+				return false;
+			
+			states[frame] = value;
+			return true;
+		}
+		
+		public function recordNumber(frame:int, value:Number):Boolean
+		{
+			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
+			if ((states[frame] != Number.MIN_VALUE) && (states[frame] != value))
+				return false;
+			
+			states[frame] = value;
+			return true;
+		}
+		
+		public function playbackInt(frame:int):int
+		{
+			return states[frame];
+		}
+		
+		public function playbackNumber(frame:int):Number
+		{
+			return states[frame];
+		}
+		
+		/*public function startInterval(n:int):int
 		{
 			start[n] = start[0];
 			
@@ -68,8 +97,8 @@ package
 			
 			delta[n] = int.MIN_VALUE;
 			
-			return start[
-		}
+			return start[n];
+		}*/
 		
 	}
 

@@ -10,39 +10,46 @@ package
 		
 		private var states:Vector.<TimeState>;
 		
-		protected const STATE_X:int = 0;
-		protected const STATE_Y:int = 1;
-		protected const NUM_BASE_STATES:int = 2;
+		protected static const STATE_X:int = 0;
+		protected static const STATE_Y:int = 1;
+		protected static const NUM_BASE_STATES:int = 2;
 		
-		public function TimeEntity(x:Number, y:Number, numStates:int, graphic:Graphic = null, mask:Mask = null) 
+		public function TimeEntity(x:Number, y:Number, numIntervals:int, graphic:Graphic = null, mask:Mask = null) 
 		{
 			super(x, y, graphic, mask);
 			
 			states = new Vector.<TimeState>();
 			
-			states.push(new TimeState(numStates, x, false));
-			states.push(new TimeState(numStates, y, false));
+			states.push(new TimeState(numIntervals, true)); // X
+			states.push(new TimeState(numIntervals, true)); // Y
+			
+			recordState(0);
 		}
 		
-		public function startInterval(n:int):Boolean
+		override public function update():void 
 		{
-			x = states[STATE_X].startInterval(n);
-			y = states[STATE_Y].startInterval(n);
-			
-			return true;
-		}
-		
-		public function endInterval(n:int):Boolean
-		{
-			states[STATE_X].endInterval(n, x);
-			states[STATE_Y].endInterval(n, y);
-			
-			return true; // TODO: Make this false!!
+			super.update();
 		}
 		
 		override public function render():void 
 		{
+			super.render();
+		}
+		
+		public function recordState(frame:int):Boolean
+		{
+			var success:Boolean = true;
 			
+			if (!states[STATE_X].recordInt(frame, x))	success = false;
+			if (!states[STATE_Y].recordInt(frame, y))	success = false;
+			
+			return success;
+		}
+		
+		public function playback(frame:int):void
+		{
+			x = states[STATE_X].playbackInt(frame);
+			y = states[STATE_Y].playbackInt(frame);
 		}
 		
 	}
