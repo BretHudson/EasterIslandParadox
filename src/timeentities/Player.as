@@ -2,6 +2,7 @@ package timeentities
 {
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	/**
 	 * ...
@@ -123,6 +124,13 @@ package timeentities
 			//sprite.drawMask = Effects.paradoxLines;
 			//sprite.color = 0x00FF4444;
 			super.render();
+		}
+		
+		override protected function renderParadox():void 
+		{
+			// TODO: Do nothing here for player :)
+			
+			super.renderParadox();
 		}
 		
 	}

@@ -13,9 +13,10 @@ package
 	public class Effects 
 	{
 		
-		private static const paradoxDarkColor:uint = 0x99FFFFFF;
-		private static const paradoxLightColor:uint = 0xCCFFFFFF;
+		private static const paradoxDarkColor:uint = 0xCCFFFFFF;
+		private static const paradoxLightColor:uint = 0xFFFFFFFF;
 		private static const paradoxLineSpacing:int = 2;
+		private static var paradoxOffset:int = 0;
 		public static var paradoxLines:BitmapData;
 		
 		private static var percentTransparentData:BitmapData;
@@ -39,18 +40,19 @@ package
 		{
 			++updateCount;
 			
-			if (updateCount % 9 == 0)
+			if (updateCount % 30 == 0)
 			{
+				paradoxOffset = (paradoxOffset + 1) % (paradoxLineSpacing * 2);
 				paradoxLines.scroll( -1, 0);
-				//fillParadoxLines(updateCount / 10);
+				//fillParadoxLines(paradoxOffset);
 			}
 		}
 		
 		private static function fillParadoxLines(xOffset:int):void
 		{
-			var rectToFill:Rectangle = new Rectangle(xOffset, 0, paradoxLineSpacing, Level.GAME_HEIGHT);
+			var rectToFill:Rectangle = new Rectangle(-xOffset, 0, paradoxLineSpacing, Level.GAME_HEIGHT);
 			
-			var fillsToDo:int = Level.GAME_WIDTH / (paradoxLineSpacing * 2);
+			var fillsToDo:int = Level.GAME_WIDTH / (paradoxLineSpacing * 2) + 1;
 			for (var i:int = 0; i < fillsToDo; ++i)
 			{
 				rectToFill.x += paradoxLineSpacing * 2;
@@ -72,6 +74,12 @@ package
 			percentTransparentData.fillRect(rectToFill, 0xFFFFFFFF);
 			
 			return percentTransparentData;
+		}
+		
+		public static function getAlpha(speed:Number, offset:Number, min:Number, max:Number):Number
+		{
+			offset = FP.scale(offset, 0.0, 1.0, 0.0, Math.PI);
+			return FP.scale(Math.abs(Math.cos(offset + Number(updateCount) * speed * 0.1)), 0.0, 1.0, min, max);
 		}
 		
 	}

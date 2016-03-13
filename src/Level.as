@@ -7,7 +7,9 @@ package
 	import flash.geom.Rectangle;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.tweens.misc.NumTween;
 	import net.flashpunk.utils.Draw;
+	import net.flashpunk.utils.Ease;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import net.flashpunk.World
@@ -17,12 +19,20 @@ package
 	public class Level extends World
 	{
 		
+		public static const STATE_THINKING:int = 0;
+		public static const STATE_PLAYBACK:int = 1;
+		public static const STATE_UNDO:int = 2;
+		public static const STATE_RECORDING:int = 3;
+		public static const STATE_PARADOX:int = 4;
+		
+		public var state:int = STATE_THINKING;
+		
 		public static const GAME_WIDTH:int = 352;
 		public static const GAME_HEIGHT:int = 176;
 		
 		private var hoveringOverGame:Boolean = false;
 		
-		private var numIntervals:int = 6;
+		public var numIntervals:int = 4;
 		private var intervalsEntered:Vector.<int>;
 		// TODO: private var intervalEnterOrder:Vector.<int>;
 		
@@ -31,7 +41,6 @@ package
 		public var curInterval:int = 0;
 		public var intervalHovering:int = -1;
 		public var curFrame:int = 0;
-		public var recording:Boolean = false;
 		public var playbackSpeed:int = 0;
 		
 		private var screenshots:Vector.<Image>;
@@ -43,8 +52,16 @@ package
 		
 		private var snapshots:Vector.<Snapshot>;
 		
+		private var undoFirst:int = 0;
+		private var undoLast:int = 300;
+		private var lastFrameUndoed:int = 0;
+		
+		private var paradoxEntities:Vector.<TimeEntity>;
+		
 		public function Level() 
 		{
+			FP.screen.color = 0xB6B6B6;
+			
 			initIntervals();
 			initSnapshots();
 			
@@ -53,16 +70,14 @@ package
 			addTimeEntity(new Crate(20, 20, numIntervals));
 			addTimeEntity(new Player(64, 48, numIntervals));
 			
+			paradoxEntities = new Vector.<TimeEntity>();
+			
 			camera.x = camera.y = -24;
 		}
 		
 		private function initIntervals():void
 		{
 			intervalsEntered = new Vector.<int>();
-			for (var i:int = 0; i < numIntervals; ++i)
-			{
-				intervalsEntered.push(0);
-			}
 		}
 		
 		private function initSnapshots():void
@@ -108,10 +123,10 @@ package
 		{
 			// TODO: Set everything to that interval
 			
-			recording = true;
+			state = STATE_RECORDING;
 			curFrame = curInterval * TimeState.FRAMES_PER_INTERVAL;
 			
-			intervalsEntered[curInterval] = 1;
+			intervalsEntered[intervalsEntered.length] = curInterval;
 			
 			showFrame(curFrame);
 			
@@ -122,33 +137,44 @@ package
 			}
 			
 			// TODO: Make sure a paradox can't happen
-			recordState(); // Record this state
+			recordState(false); // Record this state
 		}
 		
-		public function recordState():void
+		public function recordState(checkForEnd:Boolean = true):void
 		{
-			++curFrame;
-			
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
 				if (!timeEntities[i].recordState(curFrame))
 				{
 					// TODO: Add that entity to a list of entities that are in a paradox!
-					trace(timeEntities[i].name, " in paradox");
+					paradoxEntities.push(timeEntities[i]);
+					timeEntities[i].inParadox = true;
+					trace(timeEntities[i].name, " in paradox", paradoxEntities.length);
 				}
 			}
 			
-			if (curFrame % TimeState.FRAMES_PER_INTERVAL == 0)
+			if (checkForEnd)
 			{
-				endRecording();
+				if (paradoxEntities.length > 0)
+				{
+					endRecording();
+					state = STATE_PARADOX;
+					return;
+				}
+				
+				if (curFrame % TimeState.FRAMES_PER_INTERVAL == 0)
+				{
+					endRecording();
+					return;
+				}
 			}
+			
+			++curFrame;
 		}
 		
 		public function endRecording():void
 		{
-			recording = false;
-			
-			intervalsEntered[curInterval] = 2;
+			state = STATE_THINKING;
 			
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
@@ -173,25 +199,25 @@ package
 		
 		override public function update():void 
 		{
-			if (recording)
+			switch (state)
 			{
-				gameState();
-			}
-			else
-			{
-				thinkState();
+				case STATE_THINKING:
+					thinkState();
+					break;
+				case STATE_PLAYBACK:
+					break;
+				case STATE_UNDO:
+					undoState();
+					break;
+				case STATE_RECORDING:
+					gameState();
+					break;
+				case STATE_PARADOX:
+					paradoxState();
+					break;
 			}
 			
 			super.update();
-		}
-		
-		public function gameState():void
-		{
-			recordState();
-			if (curFrame < (curInterval + 1) * TimeState.FRAMES_PER_INTERVAL)
-				snapshots[curInterval].percentRecorded = (curFrame % TimeState.FRAMES_PER_INTERVAL) / TimeState.FRAMES_PER_INTERVAL;
-			else
-				snapshots[curInterval].percentRecorded = 1;
 		}
 		
 		public function thinkState():void
@@ -230,6 +256,17 @@ package
 				}
 			}
 			
+			if (Input.pressed("undo"))
+			{
+				if (intervalsEntered.length > 0)
+				{
+					state = STATE_UNDO;
+					undoFirst = intervalsEntered[intervalsEntered.length - 1] * TimeState.FRAMES_PER_INTERVAL;
+					undoLast = undoFirst + TimeState.FRAMES_PER_INTERVAL;
+					lastFrameUndoed = undoLast;
+				}
+			}
+			
 			if (playbackSpeed != 0)
 			{
 				curFrame = (curFrame + TimeState.FRAMES_PER_INTERVAL) % TimeState.FRAMES_PER_INTERVAL;
@@ -240,6 +277,92 @@ package
 				}
 				
 				curFrame += playbackSpeed;
+			}
+		}
+		
+		private var undoTween:NumTween = null;
+		private function undoState():void
+		{
+			if (undoTween == null)
+			{
+				var length:Number = 0.8 * ((undoLast - undoFirst) / TimeState.FRAMES_PER_INTERVAL);
+				undoTween = new NumTween(undoDone, 0);
+				undoTween.tween(undoLast, undoFirst, length, Ease.quintInOut);
+				addTween(undoTween, true);
+				curInterval = undoFirst / TimeState.FRAMES_PER_INTERVAL;
+				Snapshot.selectedOne = snapshots[curInterval];
+			}
+			
+			// Get the new current frame, fix snapshot percentage
+			curFrame = undoTween.value;
+			if (curFrame < (curInterval + 1) * TimeState.FRAMES_PER_INTERVAL)
+				snapshots[curInterval].percentRecorded = (curFrame % TimeState.FRAMES_PER_INTERVAL) / TimeState.FRAMES_PER_INTERVAL;
+			else
+				snapshots[curInterval].percentRecorded = 1;
+			
+			if (curFrame != undoLast)
+				showFrame(curFrame);
+			
+			// Undo all those frames
+			while (lastFrameUndoed > curFrame)
+			{
+				undoFrame(lastFrameUndoed);
+				--lastFrameUndoed;
+			}
+		}
+		
+		private function undoDone():void
+		{
+			// Make sure you undo the first frame or else we're gonna have an issue potentially
+			undoFrame(curFrame);
+			removeTween(undoTween);
+			undoTween = null;
+			state = STATE_THINKING;
+			intervalsEntered.pop();
+			trace(intervalsEntered.length);
+			trace("DONE!");
+		}
+		
+		private function undoFrame(frame:int):void
+		{
+			for (var i:int = 0; i < timeEntities.length; ++i)
+			{
+				timeEntities[i].undo(frame);
+			}
+		}
+		
+		public function gameState():void
+		{
+			recordState();
+			if (curFrame < (curInterval + 1) * TimeState.FRAMES_PER_INTERVAL)
+				snapshots[curInterval].percentRecorded = (curFrame % TimeState.FRAMES_PER_INTERVAL) / TimeState.FRAMES_PER_INTERVAL;
+			else
+				snapshots[curInterval].percentRecorded = 1;
+			
+			if (Input.pressed("undo"))
+			{
+				state = STATE_UNDO;
+				undoFirst = curInterval * TimeState.FRAMES_PER_INTERVAL;
+				undoLast = curFrame;
+				lastFrameUndoed = undoLast;
+			}
+		}
+		
+		private function paradoxState():void
+		{
+			// TODO: Undo
+			if (Input.pressed("undo"))
+			{
+				state = STATE_UNDO;
+				undoFirst = intervalsEntered[intervalsEntered.length - 1] * TimeState.FRAMES_PER_INTERVAL;
+				undoLast = undoFirst + TimeState.FRAMES_PER_INTERVAL;
+				lastFrameUndoed = undoLast;
+				
+				while (paradoxEntities.length)
+				{
+					var e:TimeEntity = paradoxEntities.pop();
+					e.inParadox = false;
+				}
 			}
 		}
 		
@@ -280,7 +403,7 @@ package
 		override public function render():void 
 		{
 			// Screenshot background
-			Draw.rect(0, GAME_HEIGHT, GAME_WIDTH, 300 - GAME_HEIGHT - 48, 0x000000);
+			Draw.rect(0, GAME_HEIGHT, GAME_WIDTH, 300 - GAME_HEIGHT - 48, 0xFFFFFF);
 			
 			// Game area background
 			if (hoveringOverGame)
@@ -308,6 +431,18 @@ package
 			
 			super.render();
 			
+			switch (state)
+			{
+				case STATE_THINKING:
+				case STATE_PLAYBACK:
+				case STATE_UNDO:
+				case STATE_RECORDING:
+					
+				case STATE_PARADOX:
+					renderParadox();
+					break;
+			}
+			
 			/*for (var i:int = 0; i < screenshots.length; ++i)
 			{
 				var drawPoint:Point = new Point(0, 225);
@@ -328,6 +463,11 @@ package
 			}
 			
 			// TODO: Render missiles here
+		}
+		
+		private function renderParadox():void
+		{
+			//Draw.rect(FP.camera.x, FP.camera.y, FP.screen.width, FP.screen.height, 0xFF0000, Effects.getAlpha(1.0, 0.0, 0.5));
 		}
 		
 	}

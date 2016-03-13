@@ -4,23 +4,29 @@ package
 	public class TimeState 
 	{
 		
-		public static const FRAMES_PER_INTERVAL:int = 60;
+		public static const FRAMES_PER_INTERVAL:int = 90;
 		
 		// Values at beginning of each interval
 		private var states:Array;
+		public var timesWrittenTo:Array;
 		
 		// If it can only be changed once (IE a crate breaking)
 		private var oneTime:Boolean;
+		
+		public var wrongInt:int = int.MIN_VALUE;
+		public var wrongNumber:Number = 0;
 		
 		public function TimeState(numIntervals:int, isInt:Boolean, oneTime:Boolean = false)
 		{
 			var frameCount:int = numIntervals * FRAMES_PER_INTERVAL;
 			
 			states = new Array(frameCount);
+			timesWrittenTo = new Array(frameCount);
 			
 			for (var i:int = 0; i < frameCount; ++i)
 			{
 				states[i] = ((isInt) ? int.MIN_VALUE : Number.MIN_VALUE);
+				timesWrittenTo[i] = 0;
 			}
 			
 			this.oneTime = oneTime;
@@ -29,8 +35,11 @@ package
 		public function recordInt(frame:int, value:int):Boolean
 		{
 			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
-			if ((states[frame] > int.MIN_VALUE) && (states[frame] != value))
+			if ((++timesWrittenTo[frame] > 1) && (states[frame] != value))
+			{
+				wrongInt = value;
 				return false;
+			}
 			
 			states[frame] = value;
 			return true;
@@ -39,8 +48,11 @@ package
 		public function recordNumber(frame:int, value:Number):Boolean
 		{
 			// If that state has already been set, and it's not equal, we have a paradox! RECORD FAILED!
-			if ((states[frame] > int.MIN_VALUE) && (states[frame] != value))
+			if ((++timesWrittenTo[frame] > 1) && (states[frame] != value))
+			{
+				wrongNumber = value;
 				return false;
+			}
 			
 			states[frame] = value;
 			return true;
@@ -48,7 +60,7 @@ package
 		
 		public function playbackInt(frame:int):int
 		{
-			while ((states[frame] == Number.MIN_VALUE) || (states[frame] == int.MIN_VALUE))
+			while (timesWrittenTo[frame] == 0)
 			{
 				frame -= FRAMES_PER_INTERVAL;
 			}
@@ -57,11 +69,19 @@ package
 		
 		public function playbackNumber(frame:int):Number
 		{
-			while ((states[frame] == Number.MIN_VALUE) || (states[frame] == int.MIN_VALUE))
+			while (timesWrittenTo[frame] == 0)
 			{
 				frame -= FRAMES_PER_INTERVAL;
 			}
 			return states[frame];
+		}
+		
+		public function undo(frame:int):void
+		{
+			if (--timesWrittenTo[frame] == 0)
+			{
+				states[frame] = 0;
+			}
 		}
 		
 		/*public function startInterval(n:int):int

@@ -18,6 +18,7 @@ package
 	{
 		
 		// TODO: Draw time bar underneath
+		// TODO: Center all snapshots!
 		
 		public static var scale:Number;
 		
@@ -28,6 +29,8 @@ package
 		private var grayscaleImage:Image;
 		
 		public static var selectedOne:Snapshot;
+		
+		private var listeningToMouse:Boolean = false;
 		
 		public function Snapshot(x:int, y:int)
 		{
@@ -41,7 +44,9 @@ package
 		
 		override public function update():void 
 		{
-			if ((Input.mousePressed) && (mouseHover()))
+			listeningToMouse = Level(world).state == Level.STATE_THINKING;
+			
+			if ((listeningToMouse) && (Input.mousePressed) && (mouseHover()))
 			{
 				selectedOne = this;
 			}
@@ -75,7 +80,7 @@ package
 		{
 			if (selectedOne == this)
 				Draw.rect(x - border, y - border, width + border * 2, height + border * 2, 0x008800);
-			else if (mouseHover())
+			else if ((listeningToMouse) && (mouseHover()))
 				Draw.rect(x - border, y - border, width + border * 2, height + border * 2, 0xFFFF00);
 			
 			if (graphiclist.count >= 1)

@@ -13,11 +13,12 @@ package
 	public class Main extends Engine 
 	{
 		
-		public function Main():void 
+		private var scale:int = 2;
+		
+		public function Main():void
 		{
-			super(400, 300, 60, false);
-			
-			FP.screen.scale = 2;
+			super(800 / scale, 600 / scale, 60, false);
+			FP.screen.scale = scale;
 			
 			FP.console.enable();
 			
@@ -46,6 +47,8 @@ package
 			Input.define("enter", Key.ENTER);
 			Input.define("escape", Key.ESCAPE);
 			Input.define("jump", Key.UP, Key.W, Key.Z, Key.X, Key.SPACE);
+			
+			Input.define("undo", Key.BACKSPACE);
 		}
 		
 	}
