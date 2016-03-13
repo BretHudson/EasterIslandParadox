@@ -1,5 +1,6 @@
 package timeentities
 {
+	import net.flashpunk.graphics.Image;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	
@@ -11,6 +12,9 @@ package timeentities
 			super(x, y, numIntervals);
 			
 			// TODO: Put other things here!
+			
+			sprite = Image.createRect(20, 20);
+			graphic = sprite;
 			
 			name = "crate";
 			
@@ -25,11 +29,6 @@ package timeentities
 				//x = Input.mouseX - 24;
 				//y = Input.mouseY - 24;
 			}
-		}
-		
-		override public function render():void 
-		{
-			Draw.rectPlus(x, y, 20, 20, 0xFFFFFF);
 		}
 		
 		override public function recordState(frame:int):Boolean 

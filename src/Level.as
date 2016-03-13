@@ -58,6 +58,9 @@ package
 		
 		private var paradoxEntities:Vector.<TimeEntity>;
 		
+		public var player:Player;
+		private var curFrameIndex:int = 0;
+		
 		public function Level() 
 		{
 			FP.screen.color = 0xB6B6B6;
@@ -68,7 +71,10 @@ package
 			timeEntities = new Vector.<TimeEntity>();
 			
 			addTimeEntity(new Crate(20, 20, numIntervals));
-			addTimeEntity(new Player(64, 48, numIntervals));
+			
+			player = new Player(64, 48, numIntervals);
+			player.active = false;
+			add(player);
 			
 			paradoxEntities = new Vector.<TimeEntity>();
 			
@@ -125,16 +131,19 @@ package
 			
 			state = STATE_RECORDING;
 			curFrame = curInterval * TimeState.FRAMES_PER_INTERVAL;
+			curFrameIndex = intervalsEntered.length * TimeState.FRAMES_PER_INTERVAL;
 			
 			intervalsEntered[intervalsEntered.length] = curInterval;
 			
-			showFrame(curFrame);
+			showFrame(curFrame, curFrameIndex);
 			
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
 				timeEntities[i].active = true;
 				//timeEntities[i].playback(curFrame);
 			}
+			
+			player.active = true;
 			
 			// TODO: Make sure a paradox can't happen
 			recordState(false); // Record this state
@@ -153,6 +162,8 @@ package
 				}
 			}
 			
+			player.recordState(curFrameIndex);
+			
 			if (checkForEnd)
 			{
 				if (paradoxEntities.length > 0)
@@ -170,6 +181,9 @@ package
 			}
 			
 			++curFrame;
+			++curFrameIndex;
+			
+			//trace(curFrameNum);
 		}
 		
 		public function endRecording():void
@@ -181,20 +195,25 @@ package
 				timeEntities[i].active = false;
 			}
 			
+			player.active = false;
+			
 			timeToTakeScreenshot = true;
 		}
 		
-		public function showFrame(frame:int):void
+		public function showFrame(frame:int, frameIndex:int):void
 		{
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
 				timeEntities[i].playback(frame);
 			}
+			
+			player.playback(frameIndex);
 		}
 		
 		public function showFrameAtInterval(interval:int):void
 		{
-			showFrame(interval * TimeState.FRAMES_PER_INTERVAL);
+			// TODO: This
+			//showFrame(interval * TimeState.FRAMES_PER_INTERVAL);
 		}
 		
 		override public function update():void 
@@ -233,7 +252,17 @@ package
 					
 					curFrame = (i * TimeState.FRAMES_PER_INTERVAL) + 0;
 					
-					showFrame(curFrame);
+					curFrameIndex = 0;
+					for (var j:int = 0; j < intervalsEntered.length; ++j)
+					{
+						if (intervalsEntered[j] == i)
+						{
+							break;
+						}
+						curFrameIndex += TimeState.FRAMES_PER_INTERVAL;
+					}
+					
+					showFrame(curFrame, curFrameIndex);
 				}
 			}
 			
@@ -252,6 +281,7 @@ package
 				
 				if (hoveringOverGame)
 				{
+					// TODO: Make sure this interval hasn't been entered into before
 					beginRecording();
 				}
 			}
@@ -301,34 +331,35 @@ package
 				snapshots[curInterval].percentRecorded = 1;
 			
 			if (curFrame != undoLast)
-				showFrame(curFrame);
+				showFrame(curFrame, curFrameIndex);
 			
 			// Undo all those frames
 			while (lastFrameUndoed > curFrame)
 			{
-				undoFrame(lastFrameUndoed);
+				undoFrame(lastFrameUndoed, curFrameIndex);
 				--lastFrameUndoed;
+				--curFrameIndex;
 			}
 		}
 		
 		private function undoDone():void
 		{
 			// Make sure you undo the first frame or else we're gonna have an issue potentially
-			undoFrame(curFrame);
+			undoFrame(curFrame, curFrameIndex);
 			removeTween(undoTween);
 			undoTween = null;
 			state = STATE_THINKING;
 			intervalsEntered.pop();
-			trace(intervalsEntered.length);
-			trace("DONE!");
 		}
 		
-		private function undoFrame(frame:int):void
+		private function undoFrame(frame:int, frameIndex:int):void
 		{
 			for (var i:int = 0; i < timeEntities.length; ++i)
 			{
 				timeEntities[i].undo(frame);
 			}
+			
+			player.undo(frameIndex);
 		}
 		
 		public function gameState():void
@@ -461,6 +492,8 @@ package
 				takeScreenshot(curInterval + 1);
 				timeToTakeScreenshot = false;
 			}
+			
+			Draw.text(curFrameIndex.toString(), 2, 2);
 			
 			// TODO: Render missiles here
 		}
