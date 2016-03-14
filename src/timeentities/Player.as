@@ -28,6 +28,7 @@ package timeentities
 		private var jspeed:Number = -4.2;
 		private var djspeed:Number = -3.8;
 		private var hasDoubleJumped:Boolean = true;
+		private var jumpInputBuffering:int = 0;
 		
 		public function Player(x:int, y:int, numIntervals:int) 
 		{
@@ -79,7 +80,10 @@ package timeentities
 			yspeed += gspeed;
 			
 			// Jump
-			if ((!hasDoubleJumped) && (Input.pressed("jump")))
+			if (Input.pressed("jump"))
+				jumpInputBuffering = 3;
+			
+			if ((!hasDoubleJumped) && (jumpInputBuffering > 0))
 			{
 				//yspeed += djspeed;
 				if (yspeed < 1.0)
@@ -93,12 +97,14 @@ package timeentities
 				
 				yspeed += djspeed;
 				hasDoubleJumped = true;
+				jumpInputBuffering = 0;
 			}
 			
-			if ((Input.pressed("jump")) && (collideWithSolidY(y + 1)))
+			if ((jumpInputBuffering > 0) && (collideWithSolidY(y + 1)))
 			{
 				yspeed = jspeed;
 				hasDoubleJumped = false;
+				jumpInputBuffering = 0;
 			}
 			
 			// Movement
@@ -113,7 +119,6 @@ package timeentities
 					xspeed = 0;
 					break;
 				}
-				
 				
 				if (!collide("solid", x + xdir, y))
 					x += xdir;
@@ -137,6 +142,14 @@ package timeentities
 					break;
 				}
 			}
+			
+			if (jumpInputBuffering > 0)
+				--jumpInputBuffering;
+		}
+		
+		override public function render():void 
+		{
+			super.render();
 		}
 		
 		override public function recordState(frame:int):Boolean 
