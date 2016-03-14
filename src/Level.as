@@ -79,8 +79,9 @@ package
 			doorMessenger = new DoorMessenger();
 			addDoor(new Door(96, 144, numIntervals));
 			
-			doorMessenger.addMessage(30, 0);
-			doorMessenger.addMessage(60, 0);
+			doorMessenger.openCloseAtInterval(0, 0);
+			//doorMessenger.addMessage(30, 0);
+			//doorMessenger.addMessage(60, 0);
 			
 			// Player
 			player = new Player(64, 48, numIntervals);

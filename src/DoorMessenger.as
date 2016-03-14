@@ -30,6 +30,13 @@ package
 			doors.push(door);
 		}
 		
+		public function openCloseAtInterval(interval:int, doorID:int):void
+		{
+			var offset:int = interval * TimeState.FRAMES_PER_INTERVAL;
+			addMessage(interval + 15, doorID);
+			addMessage(interval + TimeState.FRAMES_PER_INTERVAL - 15, doorID);
+		}
+		
 		public function addMessage(frame:int, doorID:int):void
 		{
 			var msg:DoorMsg = new DoorMsg;
