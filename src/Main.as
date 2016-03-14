@@ -1,5 +1,6 @@
 package 
 {
+	import flash.events.Event;
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
 	import net.flashpunk.utils.Input;
@@ -11,11 +12,13 @@ package
 	
 	// TODO: Make it so the world is only offset by -8, -8
 	// TODO: Make a "Slowdown" effect where you only update the entities every x frames
-	
+	[Frame(factoryClass = "Preloader")]
 	public class Main extends Engine 
 	{
 		
 		private var scale:int = 2;
+		
+		private var idi:IDI;
 		
 		public function Main():void
 		{
@@ -28,11 +31,35 @@ package
 			
 			defineControls();
 			
+			idi = new IDI();
+			addChild(idi);
+			
 			FP.world = new Level();
 		}
 		
+		private var loggedIn:Boolean = false;
+		private var listenersActivated:Boolean = false;
+		
 		override public function update():void 
 		{
+			if ((!loggedIn) && (idi.idnet))
+			{
+				loggedIn = true;
+				//idi.idnet.toggleInterface('registration');
+				
+				//idi.idnet.achievementsSave(IDI.achievementThreeName, IDI.achievementThreeKey, '');
+				//var achList:* = idi.idnet.achievementsList();
+				//FP.console.log("GOT LIST");
+			}
+			
+			if ((!listenersActivated) && (stage))
+			{
+				stage.addEventListener(Event.ACTIVATE, onActivate);
+				stage.addEventListener(Event.DEACTIVATE, onDeactivate);
+				listenersActivated = true;
+				FP.console.log("YO");
+			}
+			
 			Effects.update();
 			super.update();
 		}
@@ -51,6 +78,16 @@ package
 			Input.define("jump", Key.UP, Key.W, Key.Z, Key.X, Key.SPACE);
 			
 			Input.define("undo", Key.BACKSPACE);
+		}
+		
+		private function onActivate(e:Event):void {
+			//if (FP.world is Level)
+				//Level.paused = false;
+		}
+		
+		private function onDeactivate(e:Event):void {
+			if (FP.world is Level)
+				Level.paused = true;
 		}
 		
 	}

@@ -20,6 +20,8 @@ package
 	public class Level extends World
 	{
 		
+		public static var paused:Boolean = false;
+		
 		public static const STATE_THINKING:int = 0;
 		public static const STATE_PLAYBACK:int = 1;
 		public static const STATE_UNDO:int = 2;
@@ -273,6 +275,13 @@ package
 		
 		override public function update():void 
 		{
+			
+			if (paused)
+			{
+				trace("PAUSED");
+				return;
+			}
+			
 			super.update();
 			
 			switch (state)

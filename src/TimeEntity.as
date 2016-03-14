@@ -56,6 +56,7 @@ package
 			}
 			
 			sprite.alpha = 1;
+			sprite.color = 0xFFFFFF;
 			sprite.drawMask = null;
 		}
 		
