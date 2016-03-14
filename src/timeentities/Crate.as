@@ -13,16 +13,18 @@ package timeentities
 			
 			// TODO: Put other things here!
 			
-			sprite = Image.createRect(20, 20);
+			sprite = Image.createRect(16, 16);
 			graphic = sprite;
 			
-			name = "crate";
+			type = "crate";
 			
 			recordState(0);
 		}
 		
 		override public function update():void 
 		{
+			super.update();
+			
 			//if (Input.mousePressed)
 			++x;
 			{

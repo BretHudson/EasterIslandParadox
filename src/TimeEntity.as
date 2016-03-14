@@ -15,12 +15,13 @@ package
 		protected static const STATE_Y:int = 1;
 		protected static const NUM_BASE_STATES:int = 2;
 		
+		// TODO: Refactor this so it's not just for Images (make a Graphiclist)
 		protected var sprite:Image;
 		public var inParadox:Boolean = false;
 		
-		public function TimeEntity(x:Number, y:Number, numIntervals:int, graphic:Graphic = null, mask:Mask = null) 
+		public function TimeEntity(x:Number, y:Number, numIntervals:int, graphic:Graphic = null) 
 		{
-			super(x, y, graphic, mask);
+			super(x, y, graphic);
 			
 			states = new Vector.<TimeState>();
 			

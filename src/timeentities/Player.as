@@ -34,13 +34,11 @@ package timeentities
 			sprite = new Image(SPRITE);
 			graphic = sprite;
 			
-			// TODO: Make this correct
 			setHitbox(16, 16);
+			type = "player";
 			
 			states.push(new TimeState(numIntervals, true)); // XSPEED
 			states.push(new TimeState(numIntervals, true)); // YSPEED
-			
-			name = "player";
 			
 			recordState(0);
 		}
@@ -48,6 +46,8 @@ package timeentities
 		// TODO: Jump input buffering!
 		override public function update():void 
 		{
+			super.update();
+			
 			// Input
 			var hdir:int = int(Input.check("right")) - int(Input.check("left"));
 			
@@ -117,13 +117,6 @@ package timeentities
 			
 			xspeed = states[STATE_XSPEED].playbackNumber(frame);
 			yspeed = states[STATE_YSPEED].playbackNumber(frame);
-		}
-		
-		override public function render():void 
-		{
-			//sprite.drawMask = Effects.paradoxLines;
-			//sprite.color = 0x00FF4444;
-			super.render();
 		}
 		
 		override protected function renderParadox():void 

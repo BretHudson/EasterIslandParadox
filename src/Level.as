@@ -14,6 +14,7 @@ package
 	import net.flashpunk.utils.Key;
 	import net.flashpunk.World
 	import timeentities.Crate;
+	import timeentities.Door;
 	import timeentities.Player;
 	
 	public class Level extends World
@@ -58,6 +59,8 @@ package
 		
 		private var paradoxEntities:Vector.<TimeEntity>;
 		
+		private var doorMessenger:DoorMessenger;
+		
 		public var player:Player;
 		private var curFrameIndex:int = 0;
 		
@@ -68,14 +71,23 @@ package
 			initIntervals();
 			initSnapshots();
 			
+			// Time entities
 			timeEntities = new Vector.<TimeEntity>();
-			
 			addTimeEntity(new Crate(20, 20, numIntervals));
 			
+			// Doors
+			doorMessenger = new DoorMessenger();
+			addDoor(new Door(96, 144, numIntervals));
+			
+			doorMessenger.addMessage(30, 0);
+			doorMessenger.addMessage(60, 0);
+			
+			// Player
 			player = new Player(64, 48, numIntervals);
 			player.active = false;
 			add(player);
 			
+			// Other
 			paradoxEntities = new Vector.<TimeEntity>();
 			
 			camera.x = camera.y = -24;
@@ -125,6 +137,14 @@ package
 			return e;
 		}
 		
+		public function addDoor(e:Door):Door
+		{
+			add(e);
+			addTimeEntity(e);
+			doorMessenger.addDoor(e);
+			return e;
+		}
+		
 		public function beginRecording():void
 		{
 			// TODO: Set everything to that interval
@@ -137,13 +157,7 @@ package
 			
 			showFrame(curFrame, curFrameIndex);
 			
-			for (var i:int = 0; i < timeEntities.length; ++i)
-			{
-				timeEntities[i].active = true;
-				//timeEntities[i].playback(curFrame);
-			}
-			
-			player.active = true;
+			setAllEntitiesActive(true);
 			
 			// TODO: Make sure a paradox can't happen
 			recordState(false); // Record this state
@@ -190,14 +204,19 @@ package
 		{
 			state = STATE_THINKING;
 			
-			for (var i:int = 0; i < timeEntities.length; ++i)
-			{
-				timeEntities[i].active = false;
-			}
-			
-			player.active = false;
+			setAllEntitiesActive(false);
 			
 			timeToTakeScreenshot = true;
+		}
+		
+		private function setAllEntitiesActive(active:Boolean):void
+		{
+			for (var i:int = 0; i < timeEntities.length; ++i)
+			{
+				timeEntities[i].active = active;
+			}
+			
+			player.active = active;
 		}
 		
 		public function showFrame(frame:int, frameIndex:int):void
@@ -218,6 +237,8 @@ package
 		
 		override public function update():void 
 		{
+			super.update();
+			
 			switch (state)
 			{
 				case STATE_THINKING:
@@ -235,8 +256,6 @@ package
 					paradoxState();
 					break;
 			}
-			
-			super.update();
 		}
 		
 		public function thinkState():void
@@ -330,12 +349,13 @@ package
 			else
 				snapshots[curInterval].percentRecorded = 1;
 			
-			if (curFrame != undoLast)
+			if (curFrame < undoLast)
 				showFrame(curFrame, curFrameIndex);
 			
 			// Undo all those frames
 			while (lastFrameUndoed > curFrame)
 			{
+				//trace(curFrameIndex);
 				undoFrame(lastFrameUndoed, curFrameIndex);
 				--lastFrameUndoed;
 				--curFrameIndex;
@@ -364,6 +384,8 @@ package
 		
 		public function gameState():void
 		{
+			doorMessenger.update(curFrame);
+			
 			recordState();
 			if (curFrame < (curInterval + 1) * TimeState.FRAMES_PER_INTERVAL)
 				snapshots[curInterval].percentRecorded = (curFrame % TimeState.FRAMES_PER_INTERVAL) / TimeState.FRAMES_PER_INTERVAL;
@@ -372,10 +394,12 @@ package
 			
 			if (Input.pressed("undo"))
 			{
+				// TODO: Figure out why this flashes
 				state = STATE_UNDO;
 				undoFirst = curInterval * TimeState.FRAMES_PER_INTERVAL;
-				undoLast = curFrame;
+				undoLast = curFrame - 1;
 				lastFrameUndoed = undoLast;
+				setAllEntitiesActive(false);
 			}
 		}
 		
@@ -493,7 +517,7 @@ package
 				timeToTakeScreenshot = false;
 			}
 			
-			Draw.text(curFrameIndex.toString(), 2, 2);
+			//Draw.text(curFrameIndex.toString(), 2, 2);
 			
 			// TODO: Render missiles here
 		}
