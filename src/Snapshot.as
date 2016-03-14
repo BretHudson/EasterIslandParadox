@@ -68,6 +68,7 @@ package
 			
 			colorImage = color;
 			grayscaleImage = grayscale;
+			grayscaleImage.alpha = 0.75;
 			
 			graphiclist.add(grayscaleImage);
 			graphiclist.add(colorImage);
@@ -79,9 +80,9 @@ package
 		override public function render():void 
 		{
 			if (selectedOne == this)
-				Draw.rect(x - border, y - border, width + border * 2, height + border * 2, 0x008800);
+				Draw.rectPlus(x, y, width, height, 0x008800, 1, false, 2);
 			else if ((listeningToMouse) && (mouseHover()))
-				Draw.rect(x - border, y - border, width + border * 2, height + border * 2, 0xFFFF00);
+				Draw.rectPlus(x, y, width, height, 0xFFFF00, 1, false, 2);
 			
 			if (graphiclist.count >= 1)
 			{

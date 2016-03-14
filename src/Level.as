@@ -14,6 +14,9 @@ package
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import net.flashpunk.World
+	import punk.fx.effects.GlitchFX;
+	import punk.fx.effects.ScanLinesFX;
+	import punk.fx.graphics.FXLayer;
 	import timeentities.Crate;
 	import timeentities.Door;
 	import timeentities.Player;
@@ -67,7 +70,12 @@ package
 		public var player:Player;
 		private var curFrameIndex:int = 0;
 		
-		
+		private var fxLayer:FXLayer;
+		private var scanlines:ScanLinesFX;
+		private var scanlinesRect:Rectangle;
+		private var noiseTween:NumTween;
+		private var noiseSpeed:Number = 0.004;
+		private var noiseMax:int = 35;
 		
 		public function Level() 
 		{
@@ -88,7 +96,19 @@ package
 			// Other
 			paradoxEntities = new Vector.<TimeEntity>();
 			
+			var glitchFX:GlitchFX = new GlitchFX(3, 4, 1);
+			
+			fxLayer = new FXLayer();
+			fxLayer.effects.add(glitchFX);
+			addGraphic(fxLayer);
+			
 			camera.x = camera.y = -24;
+			
+			scanlines = new ScanLinesFX(true);
+			scanlinesRect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
+			
+			noiseTween = new NumTween();
+			noiseTween.value = noiseMax;
 		}
 		
 		private function loadFromOgmo(ogmoLevel:Class):void
@@ -205,6 +225,20 @@ package
 			return e;
 		}
 		
+		private function noiseAdd():void
+		{
+			noiseTween.cancel();
+			noiseTween.tween(scanlines.noiseAmount, noiseMax, noiseSpeed * (noiseMax - scanlines.noiseAmount));
+			addTween(noiseTween, true);
+		}
+		
+		private function noiseRemove():void
+		{
+			noiseTween.cancel();
+			noiseTween.tween(scanlines.noiseAmount, 0, noiseSpeed * (scanlines.noiseAmount));
+			addTween(noiseTween, true);
+		}
+		
 		public function beginRecording():void
 		{
 			// TODO: Set everything to that interval
@@ -221,6 +255,8 @@ package
 			
 			// TODO: Make sure a paradox can't happen
 			recordState(false); // Record this state
+			
+			noiseRemove();
 		}
 		
 		public function recordState(checkForEnd:Boolean = true):void
@@ -232,6 +268,7 @@ package
 					// TODO: Add that entity to a list of entities that are in a paradox!
 					paradoxEntities.push(timeEntities[i]);
 					timeEntities[i].inParadox = true;
+					fxLayer.entities.add(timeEntities[i]);
 					trace(timeEntities[i].name, " in paradox", paradoxEntities.length);
 				}
 			}
@@ -267,6 +304,8 @@ package
 			setAllEntitiesActive(false);
 			
 			timeToTakeScreenshot = true;
+			
+			noiseAdd();
 		}
 		
 		private function setAllEntitiesActive(active:Boolean):void
@@ -291,8 +330,21 @@ package
 		
 		public function showFrameAtInterval(interval:int):void
 		{
-			// TODO: This
-			//showFrame(interval * TimeState.FRAMES_PER_INTERVAL);
+			if (interval < 0) return;
+			
+			curFrame = (interval * TimeState.FRAMES_PER_INTERVAL) + 0;
+					
+			curFrameIndex = 0;
+			for (var j:int = 0; j < intervalsEntered.length; ++j)
+			{
+				if (intervalsEntered[j] == interval)
+				{
+					break;
+				}
+				curFrameIndex += TimeState.FRAMES_PER_INTERVAL;
+			}
+			
+			showFrame(curFrame, curFrameIndex);
 		}
 		
 		override public function update():void 
@@ -323,12 +375,16 @@ package
 					paradoxState();
 					break;
 			}
+			
+			scanlines.noiseAmount = noiseTween.value;
+			fxLayer.update();
 		}
 		
 		public function thinkState():void
 		{
 			// Get hovering info
 			var hoveringOverSnapshot:Boolean = false;
+			var selectedSnapshotIndex:int = -1;
 			for (var i:int = 0; i < snapshots.length; ++i)
 			{
 				if (snapshots[i].mouseHover())
@@ -336,24 +392,18 @@ package
 					intervalHovering = i;
 					hoveringOverSnapshot = true;
 					
-					curFrame = (i * TimeState.FRAMES_PER_INTERVAL) + 0;
-					
-					curFrameIndex = 0;
-					for (var j:int = 0; j < intervalsEntered.length; ++j)
-					{
-						if (intervalsEntered[j] == i)
-						{
-							break;
-						}
-						curFrameIndex += TimeState.FRAMES_PER_INTERVAL;
-					}
-					
-					showFrame(curFrame, curFrameIndex);
+					showFrameAtInterval(i);
 				}
+				
+				if (snapshots[i] == Snapshot.selectedOne)
+					selectedSnapshotIndex = i;
 			}
 			
 			if (!hoveringOverSnapshot)
+			{
 				intervalHovering = -1;
+				//showFrameAtInterval(selectedSnapshotIndex);
+			}
 			
 			var mouseX:int = Input.mouseX + camera.x;
 			var mouseY:int = Input.mouseY + camera.y;
@@ -401,11 +451,15 @@ package
 		{
 			if (undoTween == null)
 			{
+				noiseRemove();
 				var length:Number = 0.8 * ((undoLast - undoFirst) / TimeState.FRAMES_PER_INTERVAL);
 				undoTween = new NumTween(undoDone, 0);
 				undoTween.tween(undoLast, undoFirst, length, Ease.quintInOut);
 				addTween(undoTween, true);
 				curInterval = undoFirst / TimeState.FRAMES_PER_INTERVAL;
+				
+				curFrameIndex = intervalsEntered.length * TimeState.FRAMES_PER_INTERVAL;
+				
 				Snapshot.selectedOne = snapshots[curInterval];
 			}
 			
@@ -438,6 +492,8 @@ package
 			undoTween = null;
 			state = STATE_THINKING;
 			intervalsEntered.pop();
+			
+			noiseAdd();
 		}
 		
 		private function undoFrame(frame:int, frameIndex:int):void
@@ -489,6 +545,7 @@ package
 				{
 					var e:TimeEntity = paradoxEntities.pop();
 					e.inParadox = false;
+					fxLayer.entities.remove(e);
 				}
 			}
 		}
@@ -564,7 +621,7 @@ package
 				case STATE_PLAYBACK:
 				case STATE_UNDO:
 				case STATE_RECORDING:
-					
+					break;
 				case STATE_PARADOX:
 					renderParadox();
 					break;
@@ -588,6 +645,8 @@ package
 				takeScreenshot(curInterval + 1);
 				timeToTakeScreenshot = false;
 			}
+			
+			scanlines.applyTo(FP.buffer, scanlinesRect);
 			
 			//Draw.text(curFrameIndex.toString(), 2, 2);
 			
