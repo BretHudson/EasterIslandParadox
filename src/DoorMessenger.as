@@ -32,9 +32,11 @@ package
 		
 		public function openCloseAtInterval(interval:int, doorID:int):void
 		{
+			trace("INTERVAL", interval);
+			
 			var offset:int = interval * TimeState.FRAMES_PER_INTERVAL;
-			addMessage(interval + 15, doorID);
-			addMessage(interval + TimeState.FRAMES_PER_INTERVAL - 15, doorID);
+			addMessage(offset + 15, doorID);
+			addMessage(offset + TimeState.FRAMES_PER_INTERVAL - 15, doorID);
 		}
 		
 		public function addMessage(frame:int, doorID:int):void

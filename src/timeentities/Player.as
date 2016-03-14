@@ -23,16 +23,13 @@ package timeentities
 		private var mspeed:Number = 2.0;
 		
 		private var gspeed:Number = 0.2;
-		private var jspeed:Number = -4.0;
-		
-		[Embed(source = "../assets/gfx/player.png")]
-		private const SPRITE:Class;
+		private var jspeed:Number = -4.2;
 		
 		public function Player(x:int, y:int, numIntervals:int) 
 		{
 			super(x, y, numIntervals);
 			
-			sprite = new Image(SPRITE);
+			sprite = new Image(Assets.PLAYER);
 			graphic = sprite;
 			
 			setHitbox(16, 16);

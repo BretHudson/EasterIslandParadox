@@ -66,33 +66,67 @@ package
 		
 		public function Level() 
 		{
-			FP.screen.color = 0xB6B6B6;
+			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
 			
 			initIntervals();
 			initSnapshots();
 			
 			// Time entities
 			timeEntities = new Vector.<TimeEntity>();
-			addTimeEntity(new Crate(20, 160, numIntervals));
-			addTimeEntity(new Crate(64, 160, numIntervals));
 			
 			// Doors
 			doorMessenger = new DoorMessenger();
-			addDoor(new Door(96, 144, numIntervals));
 			
-			doorMessenger.openCloseAtInterval(0, 0);
-			//doorMessenger.addMessage(30, 0);
-			//doorMessenger.addMessage(60, 0);
-			
-			// Player
-			player = new Player(64, 48, numIntervals);
-			player.active = false;
-			add(player);
+			// Load stuff
+			loadFromOgmo(Assets.LEVEL1);
 			
 			// Other
 			paradoxEntities = new Vector.<TimeEntity>();
 			
 			camera.x = camera.y = -24;
+		}
+		
+		private function loadFromOgmo(ogmoLevel:Class):void
+		{
+			var ogmoXML:XML = FP.getXML(ogmoLevel);
+			var node:XML;
+			
+			var offsetX:int = -16;
+			var offsetY:int = -16;
+			
+			// Level data
+			
+			// Solids
+			for each (node in ogmoXML.Entities.Solid)
+			{
+				add(new Solid(int(node.@x) + offsetX, int(node.@y) + offsetY));
+			}
+			
+			// Crates
+			for each (node in ogmoXML.Entities.Crate)
+			{
+				addTimeEntity(new Crate(int(node.@x) + offsetX, int(node.@y) + offsetY, numIntervals));
+			}
+			
+			// Doors
+			var doorID:int = 0;
+			for each (node in ogmoXML.Entities.Door)
+			{
+				addDoor(new Door(int(node.@x) + offsetX, int(node.@y) + offsetY, numIntervals));
+				doorMessenger.openCloseAtInterval(int(node.@interval), doorID);
+				++doorID;
+			}
+			
+			// Doors
+			
+			
+			// Player
+			player = new Player(int(ogmoXML.Entities.Player.@x) + offsetX, int(ogmoXML.Entities.Player.@y) + offsetY, numIntervals);
+			player.active = false;
+			add(player);
+			
+			var i:int = 0;
+			i *= 2;
 		}
 		
 		private function initIntervals():void

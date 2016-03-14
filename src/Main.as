@@ -5,6 +5,8 @@ package
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	
+	[SWF(width="800", height="600")]
+	
 	// TODO: Look into http://divillysausages.com/2011/04/04/as3-conditional-compilation-or-ifdef-in-flash/
 	
 	// TODO: Make it so the world is only offset by -8, -8

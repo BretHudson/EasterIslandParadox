@@ -9,9 +9,6 @@ package timeentities {
 		
 		protected static const STATE_FRAME:int = NUM_BASE_STATES + 0;
 		
-		[Embed(source = "../assets/gfx/door.png")]
-		private const SPRITE:Class;
-		
 		private var sprite2:Spritemap;
 		
 		private var open:int = 0;
@@ -23,7 +20,7 @@ package timeentities {
 			
 			sprite = Image.createRect(16, 16, 0x888888);
 			
-			sprite2 = new Spritemap(SPRITE, 16, 32);
+			sprite2 = new Spritemap(Assets.DOOR, 16, 32);
 			graphic = sprite2;
 			
 			setHitbox(6, 32, -5);

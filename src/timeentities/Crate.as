@@ -40,7 +40,7 @@ package timeentities
 				return false;
 			
 			var crate:Crate = collide("crate", x + xmove, y) as Crate;
-			if ((crate) && (!crate.move(xmove)))
+			if ((crate) && (crate != this) && (!crate.move(xmove)))
 				return false;
 			
 			x += xmove;
