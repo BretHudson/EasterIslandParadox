@@ -350,12 +350,13 @@ package
 				snapshots[curInterval].percentRecorded = 1;
 			
 			if (curFrame < undoLast)
+			{
 				showFrame(curFrame, curFrameIndex);
+			}
 			
 			// Undo all those frames
 			while (lastFrameUndoed > curFrame)
 			{
-				//trace(curFrameIndex);
 				undoFrame(lastFrameUndoed, curFrameIndex);
 				--lastFrameUndoed;
 				--curFrameIndex;
@@ -395,11 +396,15 @@ package
 			if (Input.pressed("undo"))
 			{
 				// TODO: Figure out why this flashes
+				--curFrame;
+				--curFrameIndex;
+				
 				state = STATE_UNDO;
 				undoFirst = curInterval * TimeState.FRAMES_PER_INTERVAL;
-				undoLast = curFrame - 1;
+				undoLast = curFrame;
 				lastFrameUndoed = undoLast;
 				setAllEntitiesActive(false);
+				return;
 			}
 		}
 		
