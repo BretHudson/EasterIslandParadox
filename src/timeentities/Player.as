@@ -14,6 +14,8 @@ package timeentities
 		
 		protected static const STATE_XSPEED:int = NUM_BASE_STATES + 0;
 		protected static const STATE_YSPEED:int = NUM_BASE_STATES + 1;
+		protected static const STATE_DOUBLE_JUMPED:int = NUM_BASE_STATES + 2;
+		protected static const STATE_SCALEX:int = NUM_BASE_STATES + 3;
 		
 		private var xspeed:Number = 0;
 		private var yspeed:Number = 0;
@@ -24,19 +26,24 @@ package timeentities
 		
 		private var gspeed:Number = 0.2;
 		private var jspeed:Number = -4.2;
+		private var djspeed:Number = -3.8;
+		private var hasDoubleJumped:Boolean = true;
 		
 		public function Player(x:int, y:int, numIntervals:int) 
 		{
-			super(x, y, numIntervals);
+			super(x + 8, y + 8, numIntervals);
 			
 			sprite = new Image(Assets.PLAYER);
+			sprite.centerOO()
 			graphic = sprite;
 			
-			setHitbox(16, 16);
+			setHitbox(14, 16, 7, 8);
 			type = "player";
 			
 			states.push(new TimeState(numIntervals, true)); // XSPEED
 			states.push(new TimeState(numIntervals, true)); // YSPEED
+			states.push(new TimeState(numIntervals, true)); // DOUBLE_JUMPED
+			states.push(new TimeState(numIntervals, true)); // SCALEX
 			
 			recordState(0);
 		}
@@ -61,19 +68,38 @@ package timeentities
 			
 			// Horizontal movement
 			if (hdir != 0)
+			{
+				sprite.scaleX = hdir;
 				xspeed = FP.clamp(xspeed + hdir, -mspeed, mspeed);
+			}
 			else 
 				xspeed -= fspeed * FP.sign(xspeed);
 			
 			// Apply gravity
-			if ((yspeed < 0) && (!Input.check("jump")))
-				yspeed += gspeed;
 			yspeed += gspeed;
 			
 			// Jump
-			if ((Input.pressed("jump")) &&
-			((collideWithSolidY(y + 1)) || (y + height >= Level.GAME_HEIGHT)))
+			if ((!hasDoubleJumped) && (Input.pressed("jump")))
+			{
+				//yspeed += djspeed;
+				if (yspeed < 1.0)
+				{
+					yspeed = 0.0;
+				}
+				else if (yspeed < 2.0)
+				{
+					yspeed -= 1.0;
+				}
+				
+				yspeed += djspeed;
+				hasDoubleJumped = true;
+			}
+			
+			if ((Input.pressed("jump")) && (collideWithSolidY(y + 1)))
+			{
 				yspeed = jspeed;
+				hasDoubleJumped = false;
+			}
 			
 			// Movement
 			var xabs:int = Math.abs(xspeed);
@@ -103,7 +129,7 @@ package timeentities
 			for (var yy:int = 0; yy < yabs; ++yy)
 			{
 				// TODO: Remove the second check
-				if ((!collideWithSolidY(y + ydir)) && (y + ydir + height <= Level.GAME_HEIGHT))
+				if (!collideWithSolidY(y + ydir))
 					y += ydir;
 				else
 				{
@@ -121,8 +147,11 @@ package timeentities
 			
 			if (states.length > NUM_BASE_STATES)
 			{
-				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))	success = false;
-				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))	success = false;
+				var dj:int = ((hasDoubleJumped) ? 1 : 0);
+				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))			success = false;
+				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))			success = false;
+				if (!states[STATE_DOUBLE_JUMPED].recordInt(frame, dj))			success = false;
+				if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))	success = false;
 			}
 			
 			return success;
@@ -134,6 +163,8 @@ package timeentities
 			
 			xspeed = states[STATE_XSPEED].playbackNumber(frame);
 			yspeed = states[STATE_YSPEED].playbackNumber(frame);
+			hasDoubleJumped = (states[STATE_DOUBLE_JUMPED].playbackInt(frame) == 1);
+			sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
 		}
 		
 		override protected function renderParadox():void 

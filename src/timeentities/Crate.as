@@ -13,7 +13,7 @@ package timeentities
 			
 			// TODO: Put other things here!
 			
-			sprite = Image.createRect(16, 16, 0xf4a460);
+			sprite = new Image(Assets.CRATE);
 			graphic = sprite;
 			
 			setHitbox(16, 16);

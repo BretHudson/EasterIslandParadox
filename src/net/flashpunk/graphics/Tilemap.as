@@ -298,7 +298,8 @@
 				for (x = 0; x < cols; x ++)
 				{
 					if (col[x] == '') continue;
-					setTile(x, y, uint(col[x]));
+					if (col[x] != '-1')
+						setTile(x, y, uint(col[x]));
 				}
 			}
 			

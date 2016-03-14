@@ -1,0 +1,8 @@
+<level width="384" height="208" intervals="1">
+  <Entities>
+    <Solid id="0" x="0" y="192" width="384" height="16" />
+    <Solid id="1" x="0" y="0" width="384" height="16" />
+    <Solid id="2" x="0" y="16" width="16" height="176" />
+    <Solid id="3" x="368" y="16" width="16" height="176" />
+  </Entities>
+</level>

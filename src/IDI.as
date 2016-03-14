@@ -83,7 +83,7 @@ package
 
 		private function log(message:String):void
 		{
-			FP.console.log('LOG: ' + message);
+			//FP.console.log('LOG: ' + message);
 		}
 
 

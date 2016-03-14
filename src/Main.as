@@ -24,6 +24,7 @@ package
 		{
 			super(800 / scale, 600 / scale, 60, false);
 			FP.screen.scale = scale;
+			FP.screen.color = 0x202020;
 			
 			FP.console.enable();
 			
@@ -34,7 +35,7 @@ package
 			idi = new IDI();
 			addChild(idi);
 			
-			FP.world = new Level();
+			FP.world = new Splash();
 		}
 		
 		private var loggedIn:Boolean = false;
@@ -86,8 +87,8 @@ package
 		}
 		
 		private function onDeactivate(e:Event):void {
-			if (FP.world is Level)
-				Level.paused = true;
+			/*if (FP.world is Level)
+				Level.paused = true;*/
 		}
 		
 	}

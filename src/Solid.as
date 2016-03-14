@@ -6,10 +6,10 @@ package
 	public class Solid extends Entity
 	{
 		
-		public function Solid(x:int, y:int) 
+		public function Solid(x:int, y:int, w:int, h:int) 
 		{
 			super(x, y);
-			setHitbox(16, 16);
+			setHitbox(w, h);
 			type = "solid";
 		}
 		
@@ -17,7 +17,7 @@ package
 		{
 			super.render();
 			
-			Draw.hitbox(this, false, 0xFF00FF);
+			//Draw.hitbox(this, false, 0xFF00FF);
 		}
 		
 	}

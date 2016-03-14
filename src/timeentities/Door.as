@@ -93,7 +93,7 @@ package timeentities {
 		{
 			super.render();
 			
-			Draw.hitbox(this, true, 0xFFFFFF);
+			//Draw.hitbox(this, true, 0xFFFFFF);
 		}
 		
 	}

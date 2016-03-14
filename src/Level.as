@@ -7,6 +7,7 @@ package
 	import flash.geom.Rectangle;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Tilemap;
 	import net.flashpunk.tweens.misc.NumTween;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Ease;
@@ -66,6 +67,8 @@ package
 		public var player:Player;
 		private var curFrameIndex:int = 0;
 		
+		
+		
 		public function Level() 
 		{
 			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
@@ -98,10 +101,29 @@ package
 			
 			// Level data
 			
+			// Tilemap
+			var tilemapStr:String = ogmoXML.Tilemap;
+			var tilemap:Tilemap = null;
+			
+			if (ogmoXML.Tilemap.@tileset == "Tilemap 1")
+			{
+				addGraphic(Image.createRect(GAME_WIDTH, GAME_HEIGHT, Assets.TILESET1COLOR));
+				tilemap = Assets.tileset1;
+			}
+			
+			if (tilemap)
+			{
+				tilemap.loadFromString(tilemapStr, ",");
+				tilemap.x = -16;
+				tilemap.y = -16;
+				//Assets.tileset1.setTile(0, 0, 0);
+				addGraphic(Assets.tileset1);
+			}
+			
 			// Solids
 			for each (node in ogmoXML.Entities.Solid)
 			{
-				add(new Solid(int(node.@x) + offsetX, int(node.@y) + offsetY));
+				add(new Solid(int(node.@x) + offsetX, int(node.@y) + offsetY, int(node.@width), int(node.@height)));
 			}
 			
 			// Crates
