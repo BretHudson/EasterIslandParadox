@@ -73,7 +73,8 @@ package
 			
 			// Time entities
 			timeEntities = new Vector.<TimeEntity>();
-			addTimeEntity(new Crate(20, 20, numIntervals));
+			addTimeEntity(new Crate(20, 160, numIntervals));
+			addTimeEntity(new Crate(64, 160, numIntervals));
 			
 			// Doors
 			doorMessenger = new DoorMessenger();

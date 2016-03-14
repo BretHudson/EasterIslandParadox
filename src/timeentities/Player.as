@@ -1,5 +1,6 @@
 package timeentities
 {
+	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.utils.Draw;
@@ -43,6 +44,16 @@ package timeentities
 			recordState(0);
 		}
 		
+		private function collideWithSolidY(yy:int):Entity
+		{
+			var e:Entity = null;
+			e = collide("solid", x, yy)
+			if (e)	return e;
+			e = collide("crate", x, yy)
+			if (e)	return e;
+			return e;
+		}
+		
 		// TODO: Jump input buffering!
 		override public function update():void 
 		{
@@ -64,14 +75,23 @@ package timeentities
 			
 			// Jump
 			if ((Input.pressed("jump")) &&
-			((collide("solid", x, y + 1)) || (y + height >= Level.GAME_HEIGHT)))
+			((collideWithSolidY(y + 1)) || (y + height >= Level.GAME_HEIGHT)))
 				yspeed = jspeed;
 			
 			// Movement
 			var xabs:int = Math.abs(xspeed);
 			var xdir:int = FP.sign(xspeed);
+			var crate:Crate;
 			for (var xx:int = 0; xx < xabs; ++xx)
 			{
+				crate = collide("crate", x + xdir, y) as Crate;
+				if ((crate) && (!crate.move(xdir)))
+				{
+					xspeed = 0;
+					break;
+				}
+				
+				
 				if (!collide("solid", x + xdir, y))
 					x += xdir;
 				else
@@ -86,7 +106,7 @@ package timeentities
 			for (var yy:int = 0; yy < yabs; ++yy)
 			{
 				// TODO: Remove the second check
-				if ((!collide("solid", x, y + ydir)) && (y + ydir + height <= Level.GAME_HEIGHT))
+				if ((!collideWithSolidY(y + ydir)) && (y + ydir + height <= Level.GAME_HEIGHT))
 					y += ydir;
 				else
 				{
