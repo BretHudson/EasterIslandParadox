@@ -116,7 +116,7 @@ package
 			
 			CONFIG::debug
 			{
-				menu.volume = levelSelect.volume = world1.volume = 1;
+				volume = 0;
 			}
 		}
 		

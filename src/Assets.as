@@ -11,6 +11,9 @@ package
 		[Embed(source = "assets/gfx/rollie.png")]
 		public static const PLAYER:Class;
 		
+		[Embed(source = "assets/gfx/player_mask.png")]
+		public static const PLAYERMASK:Class;
+		
 		[Embed(source = "assets/gfx/antenna.png")]
 		public static const ANTENNA:Class;
 		

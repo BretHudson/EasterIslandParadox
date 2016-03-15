@@ -4,6 +4,7 @@ package timeentities
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
+	import net.flashpunk.masks.Pixelmask;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	/**
@@ -58,7 +59,9 @@ package timeentities
 			antenna.add("stop", [4, 5, 6, 7, 0], 7, false);
 			sprites.add(antenna);
 			
-			setHitbox(14, 16, 7, 8);
+			//setHitbox(14, 16, 7, 8);
+			// TODO: Make this better
+			mask = new Pixelmask(Assets.PLAYERMASK, -8, -8);
 			type = "player";
 			
 			states.push(new TimeState(numIntervals, false)); // XSPEED
@@ -165,27 +168,45 @@ package timeentities
 			var xabs:int = Math.abs(xspeed);
 			var xdir:int = FP.sign(xspeed);
 			var crate:Crate;
+			var xstop:Boolean = false;
 			for (var xx:int = 0; xx < xabs; ++xx)
 			{
-				crate = collide("crate", x + xdir, y) as Crate;
-				if ((crate) && (!crate.move(xdir)))
+				if (collide("solid", x, y + 1))
 				{
-					antenna.play("stop");
-					xspeed = 0;
-					break;
+					crate = collide("crate", x + xdir, y) as Crate;
+					if ((crate) && (!crate.move(xdir)))
+					{
+						xstop = true;
+						break;
+					}
 				}
 				
-				if (!collide("solid", x + xdir, y))
+				if ((!collide("solid", x + xdir, y)) && (!collide("crate", x + xdir, y)))
 				{
 					antenna.play("roll");
 					x += xdir;
+					if ((!inAir) && (!collide("solid", x + xdir, y + 1)) && (!collide("crate", x + xdir, y + 1)))
+					{
+						++y;
+					}
+				}
+				else if ((!collide("solid", x + xdir, y - 2)) && (!collide("crate", x + xdir, y - 2)))
+				{
+					antenna.play("roll");
+					x += xdir;
+					--y;
 				}
 				else
 				{
-					antenna.play("stop");
-					xspeed = 0;
+					xstop = true;
 					break;
 				}
+			}
+			
+			if (xstop)
+			{
+				antenna.play("stop");
+				xspeed = 0;
 			}
 			
 			var yabs:int = Math.abs(yspeed);
