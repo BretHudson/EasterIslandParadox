@@ -147,8 +147,6 @@ package
 			if (tilemap)
 			{
 				tilemap.loadFromString(tilemapStr, ",");
-				tilemap.x = -16;
-				tilemap.y = -16;
 				//Assets.tileset1.setTile(0, 0, 0);
 				addGraphic(Assets.tileset1);
 			}

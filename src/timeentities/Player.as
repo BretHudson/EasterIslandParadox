@@ -56,8 +56,11 @@ package timeentities
 			antenna = new Spritemap(Assets.ANTENNA, 16, 16);
 			antenna.y = -16;
 			antenna.centerOO();
+			antenna.add("sit", [0]);
 			antenna.add("roll", [0, 1, 2, 3], 10);
 			antenna.add("stop", [4, 5, 6, 7, 0], 10, false);
+			antenna.play("sit");
+			antenna.update();
 			sprites.add(antenna);
 			
 			//setHitbox(14, 16, 7, 8);
@@ -160,8 +163,10 @@ package timeentities
 			}
 			else
 			{
-				if (xspeed == 0)
+				if ((xspeed == 0) && (antenna.currentAnim == "roll"))
+				{
 					antenna.play("stop");
+				}
 				sprite.frame = 0;
 			}
 			
@@ -204,7 +209,7 @@ package timeentities
 				}
 			}
 			
-			if (xstop)
+			if ((xstop) && (antenna.currentAnim == "roll"))
 			{
 				antenna.play("stop");
 				xspeed = 0;

@@ -81,7 +81,6 @@ package
 			var tween:NumTween = getTrackTween(trackIndex);
 			var startVolume:int = Math.max(track.volume, 0.001);
 			tween.tween(startVolume, 1.0, 0.5 * (1.0 - startVolume));
-			FP.console.log("Fade in", trackIndex);
 		}
 		
 		public static function getTrack(trackIndex:int):Sfx

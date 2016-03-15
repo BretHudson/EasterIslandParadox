@@ -53,7 +53,7 @@ package
 		[Embed(source = "assets/gfx/tileset1.png")]
 		public static const TILESET1:Class;
 		public static const TILESET1COLOR:uint = 0x0A0A0F;
-		public static var tileset1:Tilemap = new Tilemap(TILESET1, Level.GAME_WIDTH + 32, Level.GAME_HEIGHT + 32, 16, 16);
+		public static var tileset1:Tilemap = new Tilemap(TILESET1, Level.GAME_WIDTH, Level.GAME_HEIGHT, 16, 16);
 		
 		
 		
