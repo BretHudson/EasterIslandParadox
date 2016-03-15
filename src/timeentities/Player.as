@@ -38,6 +38,8 @@ package timeentities
 		private var sprite:Spritemap;
 		private var antenna:Spritemap;
 		
+		private var inAir:Boolean = false;
+		
 		// TODO: Possibly create a state machine for that nifty antenna
 		
 		public function Player(x:int, y:int, numIntervals:int) 
@@ -192,17 +194,33 @@ package timeentities
 			{
 				// TODO: Remove the second check
 				if (!collideWithSolidY(y + ydir))
+				{
+					inAir = true;
 					y += ydir;
+				}
 				else
 				{
 					if (yspeed > 0)
+					{
+						if (inAir)
+						{
+							inAir = false;
+							Assets.landSynth.play();
+						}
 						hasDoubleJumped = true;
+					}
 					yspeed = 0;
 					break;
 				}
 			}
 			
 			positionAntenna();
+			
+			// Collide with goal
+			if (collide("goal", x, y))
+			{
+				Level(world).playerReachedGoal();
+			}
 			
 			if (jumpInputBuffering > 0)
 				--jumpInputBuffering;

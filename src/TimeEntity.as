@@ -63,8 +63,8 @@ package
 				for (i = 0; i < sprites.children.length; ++i)
 				{
 					Image(sprites.children[i]).alpha = Effects.getAlpha(alphaSpeed, 0.5, 0.6, 1.0);
-					Image(sprites.children[i]).color = 0xFF8888;
-					Image(sprites.children[i]).drawMask = Effects.paradoxLines;
+					//Image(sprites.children[i]).color = 0xFF8888;
+					//Image(sprites.children[i]).drawMask = Effects.paradoxLines;
 				}
 				renderParadox();
 			}

@@ -1,0 +1,147 @@
+package 
+{
+	import net.flashpunk.FP;
+	import net.flashpunk.Sfx;
+	import net.flashpunk.tweens.misc.NumTween;
+	import net.flashpunk.utils.Ease;
+	
+	public class MusicManager 
+	{
+		
+		private static var menu:Sfx = new Sfx(Assets.MENUMUSIC);
+		private static var menuTween:NumTween;
+		public static const MENU:int = 0;
+		
+		private static var levelSelect:Sfx = new Sfx(Assets.LEVELSELECT);
+		private static var levelSelectTween:NumTween;
+		public static const LEVELSELECT:int = 1;
+		
+		private static var world1:Sfx = new Sfx(Assets.WORLD1);
+		private static var world1Tween:NumTween;
+		public static const WORLD1:int = 2;
+		
+		private static const maxVolume:Number = 0.5;
+		private static var _volume:Number = 1.0;
+		
+		public static function get volume():Number { return _volume * maxVolume; }
+		public static function set volume(value:Number):void
+		{
+			_volume = value;
+		}
+		
+		private static var curPlaying:int = -1;
+		
+		public static function playTrack(trackIndex:int):void
+		{
+			if (curPlaying == trackIndex) return;
+			
+			//stop();
+			
+			Sfx.setVolume
+			
+			// Adjust volumes
+			stopTrack();
+			fadeInTrack(trackIndex);
+			
+			// Play track if not playing
+			var sfx:Sfx = getTrack(trackIndex);
+			if (sfx.volume == 0)
+			{
+				sfx.loop();
+			}
+			
+			curPlaying = trackIndex;
+		}
+		
+		public static function stopTrack():void
+		{
+			fadeOutTrack(curPlaying);
+			curPlaying = -1;
+		}
+		
+		public static function fadeOutTrack(trackIndex:int):void
+		{
+			if (trackIndex < 0) return;
+			var track:Sfx = getTrack(trackIndex);
+			var tween:NumTween = getTrackTween(trackIndex);
+			tween.tween(track.volume, 0, 0.5 * track.volume);
+		}
+		
+		public static function fadeInTrack(trackIndex:int):void
+		{
+			var track:Sfx = getTrack(trackIndex);
+			var tween:NumTween = getTrackTween(trackIndex);
+			var startVolume:int = Math.max(track.volume, 0.001);
+			tween.tween(startVolume, volume, 0.5 * (volume - startVolume));
+			FP.console.log("Fade in", trackIndex);
+		}
+		
+		public static function getTrack(trackIndex:int):Sfx
+		{
+			switch (trackIndex)
+			{
+				case MENU:			return menu;
+				case LEVELSELECT:	return levelSelect;
+				case WORLD1:		return world1;
+			}
+			
+			return null;
+		}
+		
+		public static function getTrackTween(trackIndex:int):NumTween
+		{
+			switch (trackIndex)
+			{
+				case MENU:			return menuTween;
+				case LEVELSELECT:	return levelSelectTween;
+				case WORLD1:		return world1Tween;
+			}
+			
+			return null;
+		}
+		
+		public static function init():void
+		{
+			menuTween = new NumTween();
+			menuTween.tween(0, 0, 0);
+			menuTween.value = 0;
+			levelSelectTween = new NumTween();
+			levelSelectTween.tween(0, 0, 0);
+			levelSelectTween.value = volume;
+			world1Tween = new NumTween();
+			world1Tween.tween(0, 0, 0);
+			world1Tween.value = 0;
+			
+			// TODO: Adjust volumes
+			
+			CONFIG::debug
+			{
+				menu.volume = levelSelect.volume = world1.volume = 1;
+			}
+		}
+		
+		public static function update():void
+		{
+			menuTween.update();
+			menu.volume = menuTween.value;
+			if (menu.volume == 0) menu.stop();
+			else if (!menu.playing) menu.loop();
+			
+			levelSelectTween.update();
+			levelSelect.volume = levelSelectTween.value;
+			if (levelSelect.volume == 0) levelSelect.stop();
+			else if (!levelSelect.playing) levelSelect.loop();
+			
+			world1Tween.update();
+			world1.volume = world1Tween.value;
+			if (world1.volume == 0) world1.stop();
+			else if (!world1.playing) world1.loop();
+			
+			FP.console.log("Menu", menu.playing, menu.volume, menuTween.value,
+			"Level", levelSelect.playing, levelSelect.volume, levelSelectTween.value,
+			"World", world1.playing, world1.volume, world1Tween.value);
+		}
+		
+	}
+
+}

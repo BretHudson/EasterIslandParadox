@@ -1,18 +1,16 @@
 <level width="352" height="176" intervals="2">
   <Entities>
     <Solid id="0" x="0" y="160" width="352" height="16" />
-    <Solid id="2" x="112" y="128" width="192" height="32" />
+    <Player id="1" x="272" y="112" />
     <Solid id="3" x="336" y="16" width="16" height="144" />
-    <Solid id="4" x="176" y="80" width="128" height="48" />
-    <Solid id="6" x="0" y="0" width="352" height="16" />
+    <Solid id="5" x="0" y="0" width="352" height="16" />
     <Solid id="7" x="0" y="16" width="16" height="144" />
-    <Goal id="5" x="320" y="144" />
-    <Solid id="8" x="16" y="144" width="16" height="16" />
-    <Player id="1" x="16" y="128" />
-    <SlopeLeft id="9" x="32" y="144" />
-    <SlopeLeft id="10" x="272" y="64" />
-    <SlopeRight id="11" x="208" y="64" />
-    <Solid id="12" x="224" y="64" width="48" height="16" />
+    <Solid id="2" x="16" y="128" width="320" height="16" />
+    <Solid id="4" x="64" y="80" width="272" height="16" />
+    <Door id="8" x="160" y="96" interval="0" />
+    <Solid id="6" x="16" y="32" width="320" height="16" />
+    <Door id="9" x="160" y="48" interval="1" />
+    <Goal id="10" x="320" y="64" />
   </Entities>
   <Tilemap tileset="Tilemap 1" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1

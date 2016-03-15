@@ -14,6 +14,7 @@ package menus
 		override public function begin():void 
 		{
 			FP.screen.color = 0x202020;
+			MusicManager.playTrack(MusicManager.MENU);
 			FP.world = Main.levelSelect;
 		}
 		

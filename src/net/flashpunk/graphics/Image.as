@@ -151,6 +151,22 @@ package net.flashpunk.graphics
 			return image;
 		}
 		
+		public static function createRectBorder(width:uint, height:uint, thickness:int, color:uint = 0xFFFFFF, alpha:Number = 1):Image
+		{
+			var source:BitmapData = new BitmapData(width + thickness * 2, height + thickness * 2, true, 0xFFFFFFFF);
+			
+			var rect:Rectangle = new Rectangle(thickness, thickness, width, height);
+			
+			source.fillRect(rect, 0x00000000);
+			
+			var image:Image = new Image(source);
+			
+			image.color = color;
+			image.alpha = alpha;
+			
+			return image;
+		}
+		
 		/**
 		 * Creates a new circle Image.
 		 * @param	radius		Radius of the circle.

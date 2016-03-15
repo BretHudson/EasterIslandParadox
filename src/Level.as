@@ -18,6 +18,7 @@ package
 	import punk.fx.graphics.FXLayer;
 	import timeentities.Crate;
 	import timeentities.Door;
+	import timeentities.Goal;
 	import timeentities.Player;
 	
 	public class Level extends World
@@ -30,6 +31,7 @@ package
 		public static const STATE_UNDO:int = 2;
 		public static const STATE_RECORDING:int = 3;
 		public static const STATE_PARADOX:int = 4;
+		public static const STATE_COMPLETE:int = 5;
 		
 		public var state:int = STATE_THINKING;
 		
@@ -79,8 +81,6 @@ package
 		
 		public function Level(ogmoFile:Class, id:int) 
 		{
-			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
-			
 			this.id = id;
 			
 			initIntervals();
@@ -159,6 +159,16 @@ package
 				add(new Solid(int(node.@x) + offsetX, int(node.@y) + offsetY, int(node.@width), int(node.@height)));
 			}
 			
+			// Slopes
+			for each (node in ogmoXML.Entities.SlopeLeft)
+			{
+				add(new Slope(int(node.@x) + offsetX, int(node.@y) + offsetY, -1));
+			}
+			for each (node in ogmoXML.Entities.SlopeRight)
+			{
+				add(new Slope(int(node.@x) + offsetX, int(node.@y) + offsetY, 1));
+			}
+			
 			// Crates
 			for each (node in ogmoXML.Entities.Crate)
 			{
@@ -174,8 +184,8 @@ package
 				++doorID;
 			}
 			
-			// Doors
-			
+			// Goal
+			add(new Goal(ogmoXML.Entities.Goal.@x, ogmoXML.Entities.Goal.@y, numIntervals));
 			
 			// Player
 			player = new Player(int(ogmoXML.Entities.Player.@x) + offsetX, int(ogmoXML.Entities.Player.@y) + offsetY, numIntervals);
@@ -236,6 +246,13 @@ package
 			return e;
 		}
 		
+		override public function begin():void 
+		{
+			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
+			
+			MusicManager.playTrack(MusicManager.WORLD1);
+		}
+		
 		private function noiseAdd():void
 		{
 			noiseTween.cancel();
@@ -252,8 +269,6 @@ package
 		
 		public function beginRecording():void
 		{
-			// TODO: Set everything to that interval
-			
 			state = STATE_RECORDING;
 			curFrame = curInterval * TimeState.FRAMES_PER_INTERVAL;
 			curFrameIndex = intervalsEntered.length * TimeState.FRAMES_PER_INTERVAL;
@@ -264,7 +279,6 @@ package
 			
 			setAllEntitiesActive(true);
 			
-			// TODO: Make sure a paradox can't happen
 			recordState(false); // Record this state
 			
 			noiseRemove();
@@ -276,7 +290,6 @@ package
 			{
 				if (!timeEntities[i].recordState(curFrame))
 				{
-					// TODO: Add that entity to a list of entities that are in a paradox!
 					paradoxEntities.push(timeEntities[i]);
 					timeEntities[i].inParadox = true;
 					fxLayer.entities.add(timeEntities[i]);
@@ -383,6 +396,9 @@ package
 					break;
 				case STATE_PARADOX:
 					paradoxState();
+					break;
+				case STATE_COMPLETE:
+					completeState();
 					break;
 			}
 			
@@ -544,7 +560,6 @@ package
 			
 			if (Input.pressed("undo"))
 			{
-				// TODO: Figure out why this flashes
 				--curFrame;
 				--curFrameIndex;
 				
@@ -559,7 +574,6 @@ package
 		
 		private function paradoxState():void
 		{
-			// TODO: Undo
 			if (Input.pressed("undo"))
 			{
 				state = STATE_UNDO;
@@ -574,6 +588,22 @@ package
 					fxLayer.entities.remove(e);
 				}
 			}
+		}
+		
+		private function completeState():void
+		{
+			FP.console.log("Level " + id + " complete!");
+			FP.world = Main.levelSelect;
+			
+			// TODO: Go to next level
+		}
+		
+		public function playerReachedGoal():void
+		{
+			SaveState.levelComplete(id);
+			state = STATE_COMPLETE;
+			setAllEntitiesActive(false);
+			noiseAdd();
 		}
 		
 		// TODO: New screenshot version where it takes a screenshot at certain states

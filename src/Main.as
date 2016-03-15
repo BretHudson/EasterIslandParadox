@@ -43,6 +43,7 @@ package
 			
 			Assets.init();
 			Effects.init();
+			MusicManager.init();
 			
 			defineControls();
 			
@@ -53,7 +54,8 @@ package
 			levelSelect = new LevelSelect();
 			
 			//FP.world = new Level(Assets.LEVEL2);
-			FP.world = new Splash();
+			//FP.world = new Splash();
+			FP.world = new LevelSelect();
 		}
 		
 		private var loggedIn:Boolean = false;
@@ -76,10 +78,10 @@ package
 				stage.addEventListener(Event.ACTIVATE, onActivate);
 				stage.addEventListener(Event.DEACTIVATE, onDeactivate);
 				listenersActivated = true;
-				FP.console.log("YO");
 			}
 			
 			Effects.update();
+			MusicManager.update();
 			super.update();
 		}
 		
