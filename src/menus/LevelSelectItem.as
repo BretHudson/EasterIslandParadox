@@ -12,10 +12,13 @@ package menus
 	{
 		
 		private var level:Class;
+		private var id:int;
 		
-		public function LevelSelectItem(x:int, y:int, source:*, level:Class)
+		public function LevelSelectItem(x:int, y:int, id:int, source:*, level:Class)
 		{
 			super(x, y);
+			
+			this.id = id;
 			
 			var image:Image = new Image(source);
 			width = image.width;
@@ -31,7 +34,7 @@ package menus
 		{
 			if ((Input.mousePressed) && (mouseHover()))
 			{
-				FP.world = new Level(level);
+				FP.world = new Level(level, id + 1);
 			}
 		}
 		

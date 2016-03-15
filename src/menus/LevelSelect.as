@@ -10,8 +10,9 @@ package menus
 		
 		public function LevelSelect() 
 		{
-			add(new LevelSelectItem(20, 20, Assets.LEVEL1PREVIEW, Assets.LEVEL1));
-			add(new LevelSelectItem(80, 20, Assets.LEVEL1PREVIEW, Assets.LEVEL2));
+			var i:int = 0;
+			add(new LevelSelectItem(20, 20, i++, Assets.LEVEL1PREVIEW, Assets.LEVEL1));
+			add(new LevelSelectItem(80, 20, i++, Assets.LEVEL2PREVIEW, Assets.LEVEL2));
 		}
 		
 		override public function begin():void 

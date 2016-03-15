@@ -15,7 +15,7 @@ package timeentities
 		protected static const STATE_XSPEED:int = NUM_BASE_STATES + 0;
 		protected static const STATE_YSPEED:int = NUM_BASE_STATES + 1;
 		protected static const STATE_DOUBLE_JUMPED:int = NUM_BASE_STATES + 2;
-		//protected static const STATE_SCALEX:int = NUM_BASE_STATES + 3;
+		protected static const STATE_SCALEX:int = NUM_BASE_STATES + 3;
 		
 		private var xspeed:Number = 0;
 		private var yspeed:Number = 0;
@@ -30,7 +30,7 @@ package timeentities
 		private var hasDoubleJumped:Boolean = true;
 		private var jumpInputBuffering:int = 0;
 		
-		private var moveFrame:int = 0;
+		private var moveFrame:int = -1;
 		
 		public function Player(x:int, y:int, numIntervals:int) 
 		{
@@ -46,7 +46,7 @@ package timeentities
 			states.push(new TimeState(numIntervals, true)); // XSPEED
 			states.push(new TimeState(numIntervals, true)); // YSPEED
 			states.push(new TimeState(numIntervals, true)); // DOUBLE_JUMPED
-			//states.push(new TimeState(numIntervals, true)); // SCALEX
+			states.push(new TimeState(numIntervals, true)); // SCALEX
 			
 			recordState(0);
 		}
@@ -87,6 +87,8 @@ package timeentities
 			
 			if ((!hasDoubleJumped) && (jumpInputBuffering > 0))
 			{
+				// TODO: Check if floor is within 2 frames
+				
 				//yspeed += djspeed;
 				if (yspeed < 1.0)
 				{
@@ -118,7 +120,7 @@ package timeentities
 			// Squeakin'
 			if ((xspeed != 0) && (collideWithSolidY(y + 1)))
 			{
-				if (++moveFrame % 14 == 0)
+				if (++moveFrame % 20 == 0)
 				{
 					switch (Math.floor(Math.random() * 3))
 					{
@@ -171,11 +173,6 @@ package timeentities
 				--jumpInputBuffering;
 		}
 		
-		override public function render():void 
-		{
-			super.render();
-		}
-		
 		override public function recordState(frame:int):Boolean 
 		{
 			// TODO: Set frame = internalEnterCount * 60
@@ -188,7 +185,7 @@ package timeentities
 				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))			success = false;
 				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))			success = false;
 				if (!states[STATE_DOUBLE_JUMPED].recordInt(frame, dj))			success = false;
-				//if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))	success = false;
+				if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))	success = false;
 			}
 			
 			return success;
@@ -201,7 +198,7 @@ package timeentities
 			xspeed = states[STATE_XSPEED].playbackNumber(frame);
 			yspeed = states[STATE_YSPEED].playbackNumber(frame);
 			hasDoubleJumped = (states[STATE_DOUBLE_JUMPED].playbackInt(frame) == 1);
-			//sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
+			sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
 		}
 		
 		override protected function renderParadox():void 

@@ -22,18 +22,6 @@ package timeentities
 			recordState(0);
 		}
 		
-		override public function update():void 
-		{
-			super.update();
-			
-			//if (Input.mousePressed)
-			//++x;
-			{
-				//x = Input.mouseX - 24;
-				//y = Input.mouseY - 24;
-			}
-		}
-		
 		public function move(xmove:int):Boolean
 		{
 			if (collide("solid", x + xmove, y))
@@ -47,14 +35,14 @@ package timeentities
 			return true;
 		}
 		
-		override public function recordState(frame:int):Boolean 
+		/*override public function recordState(frame:int):Boolean 
 		{
 			var success:Boolean = super.recordState(frame);
 			
 			// ??
 			
 			return success;
-		}
+		}*/
 		
 	}
 

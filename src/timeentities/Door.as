@@ -89,13 +89,6 @@ package timeentities {
 			trace(open, "Time to toggle!");
 		}
 		
-		override public function render():void 
-		{
-			super.render();
-			
-			//Draw.hitbox(this, true, 0xFFFFFF);
-		}
-		
 	}
 
 }

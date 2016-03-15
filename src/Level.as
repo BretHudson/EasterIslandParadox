@@ -2,7 +2,6 @@ package
 {
 	import adobe.utils.CustomActions;
 	import flash.display.BitmapData;
-	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import net.flashpunk.FP;
@@ -76,12 +75,15 @@ package
 		private var noiseSpeed:Number = 0.004;
 		private var noiseMax:int = 35;
 		
-		public function Level(ogmoFile:Class) 
+		private var id:int;
+		
+		public function Level(ogmoFile:Class, id:int) 
 		{
 			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
 			
+			this.id = id;
+			
 			initIntervals();
-			initSnapshots();
 			
 			// Time entities
 			timeEntities = new Vector.<TimeEntity>();
@@ -91,6 +93,9 @@ package
 			
 			// Load stuff
 			loadFromOgmo(ogmoFile);
+			
+			// Snapshots
+			initSnapshots();
 			
 			// Other
 			paradoxEntities = new Vector.<TimeEntity>();
@@ -117,10 +122,17 @@ package
 			var ogmoXML:XML = FP.getXML(ogmoLevel);
 			var node:XML;
 			
-			var offsetX:int = -16;
-			var offsetY:int = -16;
+			var offsetX:int = 0;
+			var offsetY:int = 0;
+			
+			// Add outside border
+			add(new Solid( -16, -16, GAME_WIDTH + 32, 16));
+			add(new Solid( -16, GAME_HEIGHT, GAME_WIDTH + 32, 16));
+			add(new Solid( -16, 0, 16, GAME_HEIGHT));
+			add(new Solid( GAME_WIDTH, 0, 16, GAME_HEIGHT));
 			
 			// Level data
+			numIntervals = int(ogmoXML.@intervals);
 			
 			// Tilemap
 			var tilemapStr:String = ogmoXML.Tilemap;
@@ -461,7 +473,7 @@ package
 				addTween(undoTween, true);
 				curInterval = undoFirst / TimeState.FRAMES_PER_INTERVAL;
 				
-				curFrameIndex = intervalsEntered.length * TimeState.FRAMES_PER_INTERVAL;
+				curFrameIndex = (intervalsEntered.length - 1) * TimeState.FRAMES_PER_INTERVAL + (undoLast - undoFirst);
 				
 				Snapshot.selectedOne = snapshots[curInterval];
 			}
@@ -598,25 +610,9 @@ package
 				Draw.rect(-4, -4, GAME_WIDTH + 8, GAME_HEIGHT + 8, 0x00FFFF);
 			}
 			
-			Draw.rect(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xFFFFFF);
-			
-			// Grid
-			CONFIG::debug
-			{
-				var i:int = 0;
-				
-				var drawX:int = 0;
-				var drawY:int = 0;
-				for (i = 0; i < (GAME_WIDTH / 16) * (GAME_HEIGHT / 16); ++i)
-				{
-					drawX = i % (GAME_WIDTH / 16);
-					drawY = (i / (GAME_WIDTH / 16));
-					
-					Draw.rect(drawX * 16, drawY * 16, 16, 16, (i % 2 == drawY % 2) ? 0xFF0000 : 0x0000FF);
-				}
-			}
-			
 			super.render();
+			
+			Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
 			
 			switch (state)
 			{
@@ -630,14 +626,6 @@ package
 					break;
 			}
 			
-			/*for (var i:int = 0; i < screenshots.length; ++i)
-			{
-				var drawPoint:Point = new Point(0, 225);
-				drawPoint.x = i * (8 + GAME_WIDTH * Snapshot.scale);
-				if (screenshots[i] != null)
-					screenshots[i].render(FP.buffer, drawPoint, FP.camera);
-			}*/
-			
 			if (screenshots[0] == null)
 			{
 				takeScreenshot(0);
@@ -649,6 +637,7 @@ package
 				timeToTakeScreenshot = false;
 			}
 			
+			// TODO: Fix noise/scanlines
 			scanlines.applyTo(FP.buffer, gameAreaRect);
 			
 			//Draw.text(curFrameIndex.toString(), 2, 2);
@@ -658,8 +647,6 @@ package
 		
 		private function renderParadox():void
 		{
-			
-			
 			//Draw.rect(FP.camera.x, FP.camera.y, FP.screen.width, FP.screen.height, 0xFF0000, Effects.getAlpha(1.0, 0.0, 0.5));
 		}
 		

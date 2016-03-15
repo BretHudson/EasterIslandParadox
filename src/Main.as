@@ -5,6 +5,7 @@ package
 	import menus.Menu;
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
+	import net.flashpunk.graphics.Text;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	
@@ -17,6 +18,10 @@ package
 	[Frame(factoryClass = "Preloader")]
 	public class Main extends Engine 
 	{
+		
+		// Font
+		[Embed(source = "assets/04b_25__.ttf", embedAsCFF = "false", fontFamily = "04B25")]
+		public static const FONT:Class;
 		
 		private var scale:int = 2;
 		
@@ -33,6 +38,10 @@ package
 			
 			FP.console.enable();
 			
+			Text.font = "04B25";
+			Text.size = 12;
+			
+			Assets.init();
 			Effects.init();
 			
 			defineControls();
@@ -43,8 +52,8 @@ package
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
 			
-			FP.world = new Level(Assets.LEVEL2);
-			//FP.world = new Splash();
+			//FP.world = new Level(Assets.LEVEL2);
+			FP.world = new Splash();
 		}
 		
 		private var loggedIn:Boolean = false;
@@ -52,7 +61,7 @@ package
 		
 		override public function update():void 
 		{
-			if ((!loggedIn) && (idi.idnet))
+			if ((!loggedIn) && (idi) && (idi.idnet))
 			{
 				loggedIn = true;
 				//idi.idnet.toggleInterface('registration');

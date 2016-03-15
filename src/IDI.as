@@ -83,7 +83,7 @@ package
 
 		private function log(message:String):void
 		{
-			//FP.console.log('LOG: ' + message);
+			FP.console.log('LOG: ' + message);
 		}
 
 
@@ -91,14 +91,12 @@ package
 		// Below is the loader for the id.net interface. Do Not edit below.
 		public function IDI()
 		{
-			log("HI!");
 			Security.allowInsecureDomain('*');
 			Security.allowDomain('*');
 			addEventListener(Event.ADDED_TO_STAGE, onStage);
 		}
 		private function onStage(e:Event):void
 		{
-			log("Hmmm...");
 			var loaderContext:LoaderContext = new LoaderContext();
 			loaderContext.applicationDomain = ApplicationDomain.currentDomain;
 			if (Security.sandboxType != "localTrusted")
@@ -113,7 +111,6 @@ package
 		}
 		private function loadComplete(e:Event):void
 		{
-			log("LOAD COMPLETE!");
 			idnet = e.currentTarget.content;
 			idnet.addEventListener('IDNET', handleIDNET);
 			stage.addChild(idnet);

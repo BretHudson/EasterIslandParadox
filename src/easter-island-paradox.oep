@@ -5,16 +5,16 @@
   <BackgroundColor A="255" R="125" G="160" B="255" />
   <GridColor A="255" R="255" G="240" B="90" />
   <LevelDefaultSize>
-    <Width>384</Width>
-    <Height>208</Height>
+    <Width>352</Width>
+    <Height>176</Height>
   </LevelDefaultSize>
   <LevelMinimumSize>
-    <Width>384</Width>
-    <Height>208</Height>
+    <Width>352</Width>
+    <Height>176</Height>
   </LevelMinimumSize>
   <LevelMaximumSize>
-    <Width>384</Width>
-    <Height>208</Height>
+    <Width>352</Width>
+    <Height>176</Height>
   </LevelMaximumSize>
   <Filename>F:\Dropbox\PolyThrush\Current Projects\Easter Island Paradox\project\src\easter-island-paradox.oep</Filename>
   <AngleMode>Radians</AngleMode>

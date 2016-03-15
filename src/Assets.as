@@ -20,6 +20,9 @@ package
 		[Embed(source = "assets/gfx/level_previews/level1.png")]
 		public static const LEVEL1PREVIEW:Class;
 		
+		[Embed(source = "assets/gfx/level_previews/level2.png")]
+		public static const LEVEL2PREVIEW:Class;
+		
 		// Tilesets
 		[Embed(source = "assets/gfx/tileset1.png")]
 		public static const TILESET1:Class;
@@ -56,6 +59,11 @@ package
 		[Embed(source = "assets/sfx/Squeak3.mp3")]
 		public static const SQUEAK3:Class;
 		public static var Squeak3:Sfx = new Sfx(SQUEAK3);
+		
+		public static function init():void
+		{
+			
+		}
 		
 	}
 
