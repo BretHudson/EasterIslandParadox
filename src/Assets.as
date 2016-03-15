@@ -45,6 +45,18 @@ package
 		public static const JUMP2:Class;
 		public static var Jump2:Sfx = new Sfx(JUMP2);
 		
+		[Embed(source = "assets/sfx/Squeak1.mp3")]
+		public static const SQUEAK1:Class;
+		public static var Squeak1:Sfx = new Sfx(SQUEAK1);
+		
+		[Embed(source = "assets/sfx/Squeak1.mp3")]
+		public static const SQUEAK2:Class;
+		public static var Squeak2:Sfx = new Sfx(SQUEAK2);
+		
+		[Embed(source = "assets/sfx/Squeak3.mp3")]
+		public static const SQUEAK3:Class;
+		public static var Squeak3:Sfx = new Sfx(SQUEAK3);
+		
 	}
 
 }

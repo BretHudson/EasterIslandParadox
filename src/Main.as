@@ -43,7 +43,8 @@ package
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
 			
-			FP.world = new Splash();
+			FP.world = new Level(Assets.LEVEL2);
+			//FP.world = new Splash();
 		}
 		
 		private var loggedIn:Boolean = false;
