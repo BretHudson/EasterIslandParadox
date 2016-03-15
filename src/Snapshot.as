@@ -59,7 +59,7 @@ package
 		
 		public function mouseHover():Boolean
 		{
-			return collidePoint(x, y, Input.mouseX + world.camera.x, Input.mouseY + + world.camera.y);
+			return collidePoint(x, y, Input.mouseX + world.camera.x, Input.mouseY + world.camera.y);
 		}
 		
 		public function setScreenshot(color:Image, grayscale:Image):void

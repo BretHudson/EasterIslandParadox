@@ -1,4 +1,4 @@
-package 
+package menus 
 {
 	import net.flashpunk.FP;
 	import net.flashpunk.World;
@@ -13,7 +13,8 @@ package
 		
 		override public function begin():void 
 		{
-			FP.world = new Level();
+			FP.screen.color = 0x202020;
+			FP.world = Main.levelSelect;
 		}
 		
 	}

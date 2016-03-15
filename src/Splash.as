@@ -1,5 +1,6 @@
 package 
 {
+	import menus.Menu;
 	import net.flashpunk.FP;
 	import net.flashpunk.World;
 	
@@ -13,7 +14,7 @@ package
 		
 		override public function begin():void 
 		{
-			FP.world = new Menu();
+			FP.world = Main.mainmenu;
 		}
 		
 	}

@@ -32,6 +32,9 @@ package
 		[Embed(source = "assets/ogmo/level1.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL1:Class;
 		
+		[Embed(source = "assets/ogmo/level2.oel", mimeType = "application/octet-stream")]
+		public static const LEVEL2:Class;
+		
 	}
 
 }

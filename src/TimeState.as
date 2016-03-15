@@ -4,7 +4,7 @@ package
 	public class TimeState 
 	{
 		
-		public static const SECONDS_PER_INTERVAL:int = 5;
+		public static const SECONDS_PER_INTERVAL:int = 3;
 		public static const FRAMES_PER_INTERVAL:int = SECONDS_PER_INTERVAL * 60;
 		
 		// Values at beginning of each interval

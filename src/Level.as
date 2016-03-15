@@ -76,7 +76,7 @@ package
 		private var noiseSpeed:Number = 0.004;
 		private var noiseMax:int = 35;
 		
-		public function Level() 
+		public function Level(ogmoFile:Class) 
 		{
 			FP.screen.color = 0xB6B6B6; // TODO: Maybe make this just an image? Or a Draw call?
 			
@@ -90,7 +90,7 @@ package
 			doorMessenger = new DoorMessenger();
 			
 			// Load stuff
-			loadFromOgmo(Assets.LEVEL1);
+			loadFromOgmo(ogmoFile);
 			
 			// Other
 			paradoxEntities = new Vector.<TimeEntity>();
@@ -346,7 +346,6 @@ package
 		
 		override public function update():void 
 		{
-			
 			if (paused)
 			{
 				trace("PAUSED");
@@ -371,6 +370,11 @@ package
 				case STATE_PARADOX:
 					paradoxState();
 					break;
+			}
+			
+			if (Input.pressed("escape"))
+			{
+				FP.world = Main.levelSelect;
 			}
 			
 			scanlines.noiseAmount = noiseTween.value;

@@ -4,6 +4,12 @@
     <Solid id="1" x="0" y="0" width="384" height="16" />
     <Solid id="2" x="0" y="16" width="16" height="176" />
     <Solid id="3" x="368" y="16" width="16" height="176" />
+    <Solid id="4" x="128" y="48" width="128" height="16" />
+    <Solid id="5" x="128" y="144" width="128" height="16" />
+    <Solid id="6" x="112" y="64" width="16" height="80" />
+    <Solid id="7" x="256" y="64" width="16" height="80" />
+    <Player id="8" x="160" y="128" />
+    <Crate id="9" x="192" y="128" />
   </Entities>
   <Tilemap tileset="Tilemap 1" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1

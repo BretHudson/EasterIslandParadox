@@ -1,6 +1,8 @@
 package 
 {
 	import flash.events.Event;
+	import menus.LevelSelect;
+	import menus.Menu;
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
 	import net.flashpunk.utils.Input;
@@ -20,6 +22,9 @@ package
 		
 		private var idi:IDI;
 		
+		public static var mainmenu:Menu;
+		public static var levelSelect:LevelSelect;
+		
 		public function Main():void
 		{
 			super(800 / scale, 600 / scale, 60, false);
@@ -34,6 +39,9 @@ package
 			
 			idi = new IDI();
 			addChild(idi);
+			
+			mainmenu = new Menu();
+			levelSelect = new LevelSelect();
 			
 			FP.world = new Splash();
 		}
