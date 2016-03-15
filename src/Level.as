@@ -36,6 +36,7 @@ package
 		
 		public static const GAME_WIDTH:int = 352;
 		public static const GAME_HEIGHT:int = 176;
+		private var gameAreaRect:Rectangle;
 		
 		private var hoveringOverGame:Boolean = false;
 		
@@ -52,7 +53,6 @@ package
 		
 		private var screenshots:Vector.<Image>;
 		private var screenshotsGrayscale:Vector.<Image>;
-		private var screenshotrect:Rectangle;
 		private var screenshotdata:BitmapData;
 		private var screenshotgraydata:BitmapData;
 		private var timeToTakeScreenshot:Boolean = false;
@@ -72,7 +72,6 @@ package
 		
 		private var fxLayer:FXLayer;
 		private var scanlines:ScanLinesFX;
-		private var scanlinesRect:Rectangle;
 		private var noiseTween:NumTween;
 		private var noiseSpeed:Number = 0.004;
 		private var noiseMax:int = 35;
@@ -105,7 +104,7 @@ package
 			camera.x = camera.y = -24;
 			
 			scanlines = new ScanLinesFX(true);
-			scanlinesRect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
+			gameAreaRect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
 			
 			noiseTween = new NumTween();
 			noiseTween.value = noiseMax;
@@ -180,8 +179,6 @@ package
 		
 		private function initSnapshots():void
 		{
-			screenshotrect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
-			
 			screenshots = new Vector.<Image>();
 			screenshotsGrayscale = new Vector.<Image>();
 			snapshots = new Vector.<Snapshot>();
@@ -452,7 +449,7 @@ package
 			if (undoTween == null)
 			{
 				noiseRemove();
-				var length:Number = 0.8 * ((undoLast - undoFirst) / TimeState.FRAMES_PER_INTERVAL);
+				var length:Number = (0.25 * TimeState.SECONDS_PER_INTERVAL) * ((undoLast - undoFirst) / TimeState.FRAMES_PER_INTERVAL);
 				undoTween = new NumTween(undoDone, 0);
 				undoTween.tween(undoLast, undoFirst, length, Ease.quintInOut);
 				addTween(undoTween, true);
@@ -558,12 +555,12 @@ package
 			
 			// Craete normal image
 			screenshotdata = new BitmapData(GAME_WIDTH, GAME_HEIGHT);
-			screenshotdata.copyPixels(FP.buffer, screenshotrect, FP.zero);
+			screenshotdata.copyPixels(FP.buffer, gameAreaRect, FP.zero);
 			screenshots[index] = new Image(screenshotdata);
 			
 			// Create grayscale image
 			screenshotgraydata = new BitmapData(GAME_WIDTH, GAME_HEIGHT);
-			screenshotgraydata.copyPixels(FP.buffer, screenshotrect, FP.zero);
+			screenshotgraydata.copyPixels(FP.buffer, gameAreaRect, FP.zero);
 			Effects.grayscale(screenshotgraydata, screenshotgraydata.rect);
 			screenshotsGrayscale[index] = new Image(screenshotgraydata);
 			
@@ -646,7 +643,7 @@ package
 				timeToTakeScreenshot = false;
 			}
 			
-			scanlines.applyTo(FP.buffer, scanlinesRect);
+			scanlines.applyTo(FP.buffer, gameAreaRect);
 			
 			//Draw.text(curFrameIndex.toString(), 2, 2);
 			
@@ -655,6 +652,8 @@ package
 		
 		private function renderParadox():void
 		{
+			
+			
 			//Draw.rect(FP.camera.x, FP.camera.y, FP.screen.width, FP.screen.height, 0xFF0000, Effects.getAlpha(1.0, 0.0, 0.5));
 		}
 		
