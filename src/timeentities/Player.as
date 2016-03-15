@@ -94,6 +94,10 @@ package timeentities
 				{
 					yspeed -= 1.0;
 				}
+				else
+				{
+					yspeed = 1.0;
+				}
 				
 				yspeed += djspeed;
 				hasDoubleJumped = true;

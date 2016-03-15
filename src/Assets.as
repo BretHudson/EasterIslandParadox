@@ -5,7 +5,7 @@ package
 	public class Assets 
 	{
 		
-		// Images
+		// Gameplay Images
 		[Embed(source = "assets/gfx/player.png")]
 		public static const PLAYER:Class;
 		
@@ -14,6 +14,10 @@ package
 		
 		[Embed(source = "assets/gfx/crate.png")]
 		public static const CRATE:Class;
+		
+		// Level Preview Images
+		[Embed(source = "assets/gfx/level_previews/level1.png")]
+		public static const LEVEL1PREVIEW:Class;
 		
 		// Tilesets
 		[Embed(source = "assets/gfx/tileset1.png")]
