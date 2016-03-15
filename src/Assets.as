@@ -7,8 +7,12 @@ package
 	{
 		
 		// Gameplay Images
-		[Embed(source = "assets/gfx/player.png")]
+		//[Embed(source = "assets/gfx/player.png")]
+		[Embed(source = "assets/gfx/rollie.png")]
 		public static const PLAYER:Class;
+		
+		[Embed(source = "assets/gfx/antenna.png")]
+		public static const ANTENNA:Class;
 		
 		[Embed(source = "assets/gfx/door.png")]
 		public static const DOOR:Class;

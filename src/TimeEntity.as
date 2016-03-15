@@ -2,6 +2,7 @@ package
 {
 	import net.flashpunk.Entity;
 	import net.flashpunk.Graphic;
+	import net.flashpunk.graphics.Graphiclist;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.Mask;
 	import net.flashpunk.utils.Draw;
@@ -16,12 +17,15 @@ package
 		protected static const NUM_BASE_STATES:int = 2;
 		
 		// TODO: Refactor this so it's not just for Images (make a Graphiclist)
-		protected var sprite:Image;
+		protected var sprites:Graphiclist;
 		public var inParadox:Boolean = false;
 		
-		public function TimeEntity(x:Number, y:Number, numIntervals:int, graphic:Graphic = null) 
+		public function TimeEntity(x:Number, y:Number, numIntervals:int) 
 		{
-			super(x, y, graphic);
+			super(x, y);
+			
+			sprites = new Graphiclist();
+			graphic = sprites;
 			
 			states = new Vector.<TimeState>();
 			
@@ -40,24 +44,38 @@ package
 		{
 			var alphaSpeed:Number = 0.5;
 			
+			var i:int = 0;
+			
 			if (inParadox)
 			{
-				sprite.alpha = Effects.getAlpha(alphaSpeed, 0.0, 0.6, 1.0);
-				sprite.color = 0xFF8888;
-				sprite.drawMask = Effects.paradoxLines;
+				for (i = 0; i < sprites.children.length; ++i)
+				{
+					Image(sprites.children[i]).alpha = Effects.getAlpha(alphaSpeed, 0.0, 0.6, 1.0);
+					Image(sprites.children[i]).color = 0xFF8888;
+					Image(sprites.children[i]).drawMask = Effects.paradoxLines;
+				}
 			}
 			
 			super.render();
 			
 			if (inParadox)
 			{
-				sprite.alpha = Effects.getAlpha(alphaSpeed, 0.5, 0.6, 1.0);
+				for (i = 0; i < sprites.children.length; ++i)
+				{
+					Image(sprites.children[i]).alpha = Effects.getAlpha(alphaSpeed, 0.5, 0.6, 1.0);
+					Image(sprites.children[i]).color = 0xFF8888;
+					Image(sprites.children[i]).drawMask = Effects.paradoxLines;
+				}
 				renderParadox();
 			}
 			
-			sprite.alpha = 1;
-			sprite.color = 0xFFFFFF;
-			sprite.drawMask = null;
+			for (i = 0; i < sprites.children.length; ++i)
+			{
+				Image(sprites.children[i]).alpha = 1;
+				Image(sprites.children[i]).color = 0xFFFFFF;
+				Image(sprites.children[i]).drawMask = null;
+				Image(sprites.children[i]).active = this.active;
+			}
 		}
 		
 		public function recordState(frame:int):Boolean

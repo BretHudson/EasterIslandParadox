@@ -7,6 +7,8 @@ package timeentities
 	public class Crate extends TimeEntity
 	{
 		
+		private var sprite:Image;
+		
 		public function Crate(x:int, y:int, numIntervals:int) 
 		{
 			super(x, y, numIntervals);
@@ -14,7 +16,7 @@ package timeentities
 			// TODO: Put other things here!
 			
 			sprite = new Image(Assets.CRATE);
-			graphic = sprite;
+			sprites.add(sprite);
 			
 			setHitbox(16, 16);
 			type = "crate";

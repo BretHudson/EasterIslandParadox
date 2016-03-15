@@ -432,8 +432,19 @@ package
 				
 				if (hoveringOverGame)
 				{
-					// TODO: Make sure this interval hasn't been entered into before
-					beginRecording();
+					var okayToEnter:Boolean = true;
+					for (var ie:int = 0; ie < intervalsEntered.length; ++ie)
+					{
+						if (curInterval == intervalsEntered[ie])
+						{
+							okayToEnter = false;
+							break;
+						}
+						
+					}
+					
+					if (okayToEnter)
+						beginRecording();
 				}
 			}
 			
@@ -612,7 +623,7 @@ package
 			
 			super.render();
 			
-			Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
+			//Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
 			
 			switch (state)
 			{

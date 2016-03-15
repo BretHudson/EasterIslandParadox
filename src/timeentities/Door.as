@@ -9,7 +9,7 @@ package timeentities {
 		
 		protected static const STATE_FRAME:int = NUM_BASE_STATES + 0;
 		
-		private var sprite2:Spritemap;
+		private var sprite:Spritemap;
 		
 		private var open:int = 0;
 		private var openTimer:int = 0;
@@ -18,10 +18,8 @@ package timeentities {
 		{
 			super(x, y, numIntervals);
 			
-			sprite = Image.createRect(16, 16, 0x888888);
-			
-			sprite2 = new Spritemap(Assets.DOOR, 16, 32);
-			graphic = sprite2;
+			sprite = new Spritemap(Assets.DOOR, 16, 32);
+			sprites.add(sprite);
 			
 			setHitbox(6, 32, -5);
 			type = "solid";
@@ -42,7 +40,7 @@ package timeentities {
 					openTimer = 3;
 				}
 				
-				sprite2.frame = openTimer;
+				sprite.frame = openTimer;
 			}
 			else
 			{
@@ -51,10 +49,10 @@ package timeentities {
 					openTimer = 0;
 				}
 				
-				sprite2.frame = openTimer;
+				sprite.frame = openTimer;
 			}
 			
-			if (sprite2.frame == 3)
+			if (sprite.frame == 3)
 			{
 				setHitbox(0, 0);
 			}
@@ -70,7 +68,7 @@ package timeentities {
 			
 			if (states.length > NUM_BASE_STATES)
 			{
-				if (!states[STATE_FRAME].recordInt(frame, sprite2.frame))	success = false;
+				if (!states[STATE_FRAME].recordInt(frame, sprite.frame))	success = false;
 			}
 			
 			return success;
@@ -80,7 +78,7 @@ package timeentities {
 		{
 			super.playback(frame);
 			
-			sprite2.frame = states[STATE_FRAME].playbackInt(frame);
+			sprite.frame = states[STATE_FRAME].playbackInt(frame);
 		}
 		
 		public function timeToToggle():void

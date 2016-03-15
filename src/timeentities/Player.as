@@ -3,6 +3,7 @@ package timeentities
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	/**
@@ -16,6 +17,8 @@ package timeentities
 		protected static const STATE_YSPEED:int = NUM_BASE_STATES + 1;
 		protected static const STATE_DOUBLE_JUMPED:int = NUM_BASE_STATES + 2;
 		protected static const STATE_SCALEX:int = NUM_BASE_STATES + 3;
+		protected static const STATE_FRAME:int = NUM_BASE_STATES + 4;
+		protected static const STATE_ANTENNA_FRAME:int = NUM_BASE_STATES + 5;
 		
 		private var xspeed:Number = 0;
 		private var yspeed:Number = 0;
@@ -32,21 +35,36 @@ package timeentities
 		
 		private var moveFrame:int = -1;
 		
+		private var sprite:Spritemap;
+		private var antenna:Spritemap;
+		
+		// TODO: Possibly create a state machine for that nifty antenna
+		
 		public function Player(x:int, y:int, numIntervals:int) 
 		{
 			super(x + 8, y + 8, numIntervals);
 			
-			sprite = new Image(Assets.PLAYER);
-			sprite.centerOO()
-			graphic = sprite;
+			sprite = new Spritemap(Assets.PLAYER, 16, 16);
+			sprite.centerOO();
+			sprite.add("roll", [0, 1, 2], 10);
+			sprites.add(sprite);
+			
+			antenna = new Spritemap(Assets.ANTENNA, 16, 16);
+			antenna.y = -16;
+			antenna.centerOO();
+			antenna.add("roll", [0, 1, 2, 3], 10);
+			antenna.add("stop", [4, 5, 6, 7, 0], 7, false);
+			sprites.add(antenna);
 			
 			setHitbox(14, 16, 7, 8);
 			type = "player";
 			
-			states.push(new TimeState(numIntervals, true)); // XSPEED
-			states.push(new TimeState(numIntervals, true)); // YSPEED
+			states.push(new TimeState(numIntervals, false)); // XSPEED
+			states.push(new TimeState(numIntervals, false)); // YSPEED
 			states.push(new TimeState(numIntervals, true)); // DOUBLE_JUMPED
 			states.push(new TimeState(numIntervals, true)); // SCALEX
+			states.push(new TimeState(numIntervals, true)); // FRAME
+			states.push(new TimeState(numIntervals, true)); // ANTENNA_FRAME
 			
 			recordState(0);
 		}
@@ -72,11 +90,13 @@ package timeentities
 			// Horizontal movement
 			if (hdir != 0)
 			{
-				sprite.scaleX = hdir;
+				antenna.scaleX = sprite.scaleX = hdir;
 				xspeed = FP.clamp(xspeed + hdir, -mspeed, mspeed);
 			}
-			else 
+			else
+			{
 				xspeed -= fspeed * FP.sign(xspeed);
+			}
 			
 			// Apply gravity
 			yspeed += gspeed;
@@ -102,7 +122,7 @@ package timeentities
 				{
 					yspeed = 1.0;
 				}
-				
+			
 				Assets.Jump2.play();
 				yspeed += djspeed;
 				hasDoubleJumped = true;
@@ -117,9 +137,11 @@ package timeentities
 				jumpInputBuffering = 0;
 			}
 			
-			// Squeakin'
+			// They hear me Squeakin'
 			if ((xspeed != 0) && (collideWithSolidY(y + 1)))
 			{
+				sprite.play("roll");
+				
 				if (++moveFrame % 20 == 0)
 				{
 					switch (Math.floor(Math.random() * 3))
@@ -129,6 +151,12 @@ package timeentities
 						case 2: Assets.Squeak3.play(); break;
 					}
 				}
+			}
+			else
+			{
+				if (xspeed == 0)
+					antenna.play("stop");
+				sprite.frame = 0;
 			}
 			
 			// Movement
@@ -140,14 +168,19 @@ package timeentities
 				crate = collide("crate", x + xdir, y) as Crate;
 				if ((crate) && (!crate.move(xdir)))
 				{
+					antenna.play("stop");
 					xspeed = 0;
 					break;
 				}
 				
 				if (!collide("solid", x + xdir, y))
+				{
+					antenna.play("roll");
 					x += xdir;
+				}
 				else
 				{
+					antenna.play("stop");
 					xspeed = 0;
 					break;
 				}
@@ -169,8 +202,15 @@ package timeentities
 				}
 			}
 			
+			positionAntenna();
+			
 			if (jumpInputBuffering > 0)
 				--jumpInputBuffering;
+		}
+		
+		private function positionAntenna():void
+		{
+			antenna.y = ((sprite.frame == 2) ? -15 : -16);
 		}
 		
 		override public function recordState(frame:int):Boolean 
@@ -182,10 +222,12 @@ package timeentities
 			if (states.length > NUM_BASE_STATES)
 			{
 				var dj:int = ((hasDoubleJumped) ? 1 : 0);
-				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))			success = false;
-				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))			success = false;
-				if (!states[STATE_DOUBLE_JUMPED].recordInt(frame, dj))			success = false;
-				if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))	success = false;
+				if (!states[STATE_XSPEED].recordNumber(frame, xspeed))				success = false;
+				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))				success = false;
+				if (!states[STATE_DOUBLE_JUMPED].recordInt(frame, dj))				success = false;
+				if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))		success = false;
+				if (!states[STATE_FRAME].recordInt(frame, sprite.frame))			success = false;
+				if (!states[STATE_ANTENNA_FRAME].recordInt(frame, antenna.frame))	success = false;
 			}
 			
 			return success;
@@ -198,7 +240,11 @@ package timeentities
 			xspeed = states[STATE_XSPEED].playbackNumber(frame);
 			yspeed = states[STATE_YSPEED].playbackNumber(frame);
 			hasDoubleJumped = (states[STATE_DOUBLE_JUMPED].playbackInt(frame) == 1);
-			sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
+			antenna.scaleX = sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
+			sprite.frame = states[STATE_FRAME].playbackInt(frame);
+			antenna.frame = states[STATE_ANTENNA_FRAME].playbackInt(frame);
+			
+			positionAntenna();
 		}
 		
 		override protected function renderParadox():void 
