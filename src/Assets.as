@@ -1,5 +1,6 @@
 package  
 {
+	import net.flashpunk.Sfx;
 	import net.flashpunk.graphics.Tilemap;
 	
 	public class Assets 
@@ -34,6 +35,15 @@ package
 		
 		[Embed(source = "assets/ogmo/level2.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL2:Class;
+		
+		// Sounds
+		[Embed(source = "assets/sfx/Jump1.mp3")]
+		public static const JUMP1:Class;
+		public static var Jump1:Sfx = new Sfx(JUMP1);
+		
+		[Embed(source = "assets/sfx/Jump2.mp3")]
+		public static const JUMP2:Class;
+		public static var Jump2:Sfx = new Sfx(JUMP2);
 		
 	}
 

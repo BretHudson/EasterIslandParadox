@@ -99,6 +99,7 @@ package timeentities
 					yspeed = 1.0;
 				}
 				
+				Assets.Jump2.play();
 				yspeed += djspeed;
 				hasDoubleJumped = true;
 				jumpInputBuffering = 0;
@@ -106,6 +107,7 @@ package timeentities
 			
 			if ((jumpInputBuffering > 0) && (collideWithSolidY(y + 1)))
 			{
+				Assets.Jump1.play();
 				yspeed = jspeed;
 				hasDoubleJumped = false;
 				jumpInputBuffering = 0;
@@ -142,6 +144,8 @@ package timeentities
 					y += ydir;
 				else
 				{
+					if (yspeed > 0)
+						hasDoubleJumped = true;
 					yspeed = 0;
 					break;
 				}

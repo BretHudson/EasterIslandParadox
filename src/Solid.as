@@ -17,7 +17,7 @@ package
 		{
 			super.render();
 			
-			//Draw.hitbox(this, false, 0xFF00FF, 0.3);
+			Draw.hitbox(this, false, 0xFF00FF, 0.3);
 		}
 		
 	}

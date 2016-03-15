@@ -104,6 +104,8 @@ package
 			camera.x = camera.y = -24;
 			
 			scanlines = new ScanLinesFX(true);
+			scanlines.scanLinesThickness = 2;
+			scanlines.scanLinesGap = scanlines.scanLinesThickness * 2;
 			gameAreaRect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
 			
 			noiseTween = new NumTween();
