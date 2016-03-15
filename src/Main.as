@@ -98,6 +98,8 @@ package
 			Input.define("escape", Key.ESCAPE);
 			Input.define("jump", Key.UP, Key.W, Key.Z, Key.X, Key.SPACE);
 			
+			Input.define("mute", Key.M);
+			
 			Input.define("undo", Key.BACKSPACE);
 		}
 		

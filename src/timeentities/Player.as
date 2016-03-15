@@ -1,5 +1,6 @@
 package timeentities
 {
+	import flash.display.BlendMode;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
@@ -56,7 +57,7 @@ package timeentities
 			antenna.y = -16;
 			antenna.centerOO();
 			antenna.add("roll", [0, 1, 2, 3], 10);
-			antenna.add("stop", [4, 5, 6, 7, 0], 7, false);
+			antenna.add("stop", [4, 5, 6, 7, 0], 10, false);
 			sprites.add(antenna);
 			
 			//setHitbox(14, 16, 7, 8);

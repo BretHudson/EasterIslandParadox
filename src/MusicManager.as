@@ -4,6 +4,7 @@ package
 	import net.flashpunk.Sfx;
 	import net.flashpunk.tweens.misc.NumTween;
 	import net.flashpunk.utils.Ease;
+	import net.flashpunk.utils.Input;
 	
 	public class MusicManager 
 	{
@@ -20,12 +21,23 @@ package
 		private static var world1Tween:NumTween;
 		public static const WORLD1:int = 2;
 		
+		private static var world2:Sfx = new Sfx(Assets.WORLD2);
+		private static var world2Tween:NumTween;
+		public static const WORLD2:int = 2;
+		
+		private static var world3:Sfx = new Sfx(Assets.WORLD3);
+		private static var world3Tween:NumTween;
+		public static const WORLD3:int = 2;
+		
 		private static const maxVolume:Number = 0.5;
 		private static var _volume:Number = 1.0;
+		private static var _lastVolume:Number = 1.0;
+		private static var mute:Boolean = false;
 		
 		public static function get volume():Number { return _volume * maxVolume; }
 		public static function set volume(value:Number):void
 		{
+			_lastVolume = _volume;
 			_volume = value;
 		}
 		
@@ -34,10 +46,6 @@ package
 		public static function playTrack(trackIndex:int):void
 		{
 			if (curPlaying == trackIndex) return;
-			
-			//stop();
-			
-			Sfx.setVolume
 			
 			// Adjust volumes
 			stopTrack();
@@ -72,7 +80,7 @@ package
 			var track:Sfx = getTrack(trackIndex);
 			var tween:NumTween = getTrackTween(trackIndex);
 			var startVolume:int = Math.max(track.volume, 0.001);
-			tween.tween(startVolume, volume, 0.5 * (volume - startVolume));
+			tween.tween(startVolume, 1.0, 0.5 * (1.0 - startVolume));
 			FP.console.log("Fade in", trackIndex);
 		}
 		
@@ -105,41 +113,80 @@ package
 			menuTween = new NumTween();
 			menuTween.tween(0, 0, 0);
 			menuTween.value = 0;
+			
 			levelSelectTween = new NumTween();
 			levelSelectTween.tween(0, 0, 0);
 			levelSelectTween.value = volume;
+			
 			world1Tween = new NumTween();
 			world1Tween.tween(0, 0, 0);
 			world1Tween.value = 0;
+			
+			world2Tween = new NumTween();
+			world2Tween.tween(0, 0, 0);
+			world2Tween.value = 0;
+			
+			world3Tween = new NumTween();
+			world3Tween.tween(0, 0, 0);
+			world3Tween.value = 0;
 			
 			// TODO: Adjust volumes
 			
 			CONFIG::debug
 			{
-				volume = 0;
+				toggleMute();
+			}
+		}
+		
+		public static function toggleMute():void
+		{
+			mute = !mute;
+			if (mute)
+			{
+				Sfx.setVolume(null, 0);
+			}
+			else
+			{
+				Sfx.setVolume(null, 1);
 			}
 		}
 		
 		public static function update():void
 		{
+			if (Input.pressed("mute"))
+				toggleMute();
+			
 			menuTween.update();
-			menu.volume = menuTween.value;
+			menu.volume = menuTween.value * _volume;
 			if (menu.volume == 0) menu.stop();
 			else if (!menu.playing) menu.loop();
 			
 			levelSelectTween.update();
-			levelSelect.volume = levelSelectTween.value;
+			levelSelect.volume = levelSelectTween.value * _volume;
 			if (levelSelect.volume == 0) levelSelect.stop();
 			else if (!levelSelect.playing) levelSelect.loop();
 			
 			world1Tween.update();
-			world1.volume = world1Tween.value;
+			world1.volume = world1Tween.value * _volume;
 			if (world1.volume == 0) world1.stop();
 			else if (!world1.playing) world1.loop();
 			
-			FP.console.log("Menu", menu.playing, menu.volume, menuTween.value,
+			world2Tween.update();
+			world2.volume = world2Tween.value * _volume;
+			if (world2.volume == 0) world2.stop();
+			else if (!world2.playing) world2.loop();
+			
+			world3Tween.update();
+			world3.volume = world3Tween.value * _volume;
+			if (world3.volume == 0) world3.stop();
+			else if (!world3.playing) world3.loop();
+			
+			/*FP.console.log("Volume", volume,
+			"Menu", menu.playing, menu.volume, menuTween.value,
 			"Level", levelSelect.playing, levelSelect.volume, levelSelectTween.value,
-			"World", world1.playing, world1.volume, world1Tween.value);
+			"World1", world1.playing, world1.volume, world1Tween.value,
+			"World2", world2.playing, world2.volume, world2Tween.value,
+			"World3", world3.playing, world3.volume, world3Tween.value);*/
 		}
 		
 	}

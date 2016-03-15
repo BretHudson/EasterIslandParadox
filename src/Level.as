@@ -593,7 +593,11 @@ package
 		private function completeState():void
 		{
 			FP.console.log("Level " + id + " complete!");
-			FP.world = Main.levelSelect;
+			trace(id, Main.levelSelect.levelSelectItems.length);
+			if (id < Main.levelSelect.levelSelectItems.length)
+				FP.world = new Level(Main.levelSelect.levelSelectItems[id].level, id + 1);
+			else
+				FP.world = Main.levelSelect;
 			
 			// TODO: Go to next level
 		}

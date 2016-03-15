@@ -63,7 +63,8 @@ package
 		{
 			while (timesWrittenTo[frame] == 0)
 			{
-				frame -= FRAMES_PER_INTERVAL;
+				//frame -= FRAMES_PER_INTERVAL;
+				--frame;
 			}
 			return states[frame];
 		}
@@ -72,7 +73,8 @@ package
 		{
 			while (timesWrittenTo[frame] == 0)
 			{
-				frame -= FRAMES_PER_INTERVAL;
+				//frame -= FRAMES_PER_INTERVAL;
+				--frame;
 			}
 			return states[frame];
 		}

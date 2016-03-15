@@ -13,7 +13,7 @@ package menus
 	public class LevelSelectItem extends Entity
 	{
 		
-		private var level:Class;
+		public var level:Class;
 		private var id:int;
 		private var image:Image;
 		private var background:Image;
