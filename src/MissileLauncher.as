@@ -11,6 +11,7 @@ package
 		protected static const STATE_ANGLE:Number = NUM_BASE_STATES + 0;
 		protected static const STATE_ALPHA:Number = NUM_BASE_STATES + 1;
 		protected static const STATE_LAUNCHED:Number = NUM_BASE_STATES + 2;
+		protected static const STATE_TIMER:Number = NUM_BASE_STATES + 3;
 		
 		private var sprite:Image;
 		private var spriteDark:Image;
@@ -28,6 +29,9 @@ package
 		
 		public function MissileLauncher(x:int, y:int, numIntervals:int) 
 		{
+			x += 16;
+			y += 16;
+			
 			super(x, y, numIntervals);
 			
 			sprite = new Image(Assets.MISSILELAUNCHER);
@@ -51,8 +55,11 @@ package
 				missiles.push(missile);
 			}
 			
+			shootTimer = shootTimeout;
+			
 			states.push(new TimeState(numIntervals, false));
 			states.push(new TimeState(numIntervals, false));
+			states.push(new TimeState(numIntervals, true));
 			states.push(new TimeState(numIntervals, true));
 			
 			recordState(0);
@@ -90,7 +97,7 @@ package
 			if (lineOfSight)
 			{
 				var diff:Number = FP.angleDiff(sprite.angle, FP.DEG * angleToPlayer);
-				diff *= 0.9;
+				diff *= 0.8;
 				sprite.angle += diff;
 				spriteAlpha = FP.approach(spriteAlpha, 0, 0.05);
 				
@@ -132,6 +139,7 @@ package
 				if (!states[STATE_ANGLE].recordNumber(frame, sprite.angle))	success = false;
 				if (!states[STATE_ALPHA].recordNumber(frame, spriteAlpha))	success = false;
 				if (!states[STATE_LAUNCHED].recordInt(frame, missileOnScreen)) success = false;
+				if (!states[STATE_TIMER].recordInt(frame, shootTimer)) success = false;
 			}
 			
 			return success;
@@ -144,6 +152,7 @@ package
 			spriteDark.angle = sprite.angle = states[STATE_ANGLE].playbackNumber(frame);
 			spriteAlpha = states[STATE_ALPHA].playbackNumber(frame);
 			missileOnScreen = states[STATE_LAUNCHED].playbackInt(frame);
+			shootTimer = states[STATE_TIMER].playbackInt(frame);
 		}
 		
 		/*void OrientSprite() {

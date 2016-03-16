@@ -200,12 +200,12 @@
     </EntityDefinition>
     <EntityDefinition Name="MissileLauncher" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>8</Width>
-        <Height>8</Height>
+        <Width>16</Width>
+        <Height>16</Height>
       </Size>
       <Origin>
-        <X>-4</X>
-        <Y>-4</Y>
+        <X>-8</X>
+        <Y>-8</Y>
       </Origin>
       <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
         <RectColor A="255" R="255" G="255" B="0" />

@@ -61,7 +61,8 @@ package timeentities
 		public function launch(angle:Number):void
 		{
 			sprite.angle = angle;
-			collidable = true;
+			if (hasBeenLaunched == 0)
+				collidable = true;
 			hasBeenLaunched = 1;
 			speed = 2.5;
 		}
@@ -89,7 +90,7 @@ package timeentities
 			
 			if (lineOfSight)
 			{
-				var turnAmount:Number = 8;
+				var turnAmount:Number = 5;
 				var diff:Number = FP.angleDiff(sprite.angle, FP.DEG * angleToPlayer);
 				diff = FP.clamp(diff, -turnAmount, turnAmount);
 				sprite.angle += diff;
@@ -101,24 +102,27 @@ package timeentities
 			// TODO: Movement
 			moveBy(xstep * speed, ystep * speed);
 			
-			var e:Entity = collide("solid", x, y);
-			if (e)
+			if (collidable)
 			{
-				explode(x, y);
-			}
-			
-			e = collide("crate", x, y);
-			if (e)
-			{
-				(e as Crate).destroy();
-				explode(e.x + 8, e.y + 8);
-			}
-			
-			e = collide("player", x, y);
-			if (e)
-			{
-				(e as Player).die();
-				explode(e.x, e.y - 5);
+				var e:Entity = collide("solid", x, y);
+				if (e)
+				{
+					explode(x, y);
+				}
+				
+				e = collide("crate", x, y);
+				if (e)
+				{
+					(e as Crate).destroy();
+					explode(e.x + 8, e.y + 8);
+				}
+				
+				e = collide("player", x, y);
+				if (e)
+				{
+					(e as Player).die();
+					explode(e.x, e.y - 5);
+				}
 			}
 		}
 		

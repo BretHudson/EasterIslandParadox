@@ -56,6 +56,24 @@ package
 		[Embed(source = "assets/gfx/explosion.png")]
 		public static const EXPLOSION:Class;
 		
+		[Embed(source = "assets/gfx/menu_background.png")]
+		public static const MENU_CLOUDS_BACKGROUND:Class;
+		
+		[Embed(source = "assets/gfx/Menu_cloudBack.png")]
+		public static const MENU_CLOUDS_BACK:Class;
+		
+		[Embed(source = "assets/gfx/Menu_cloudFront.png")]
+		public static const MENU_CLOUDS_FRONT:Class;
+		
+		[Embed(source="assets/gfx/Menu_foreground.png")]
+		public static const MENU_ISLANDS:Class;
+		
+		[Embed(source = "assets/gfx/logo.png")]
+		public static const LOGO:Class;
+		
+		[Embed(source = "assets/gfx/buttons.png")]
+		public static const BUTTONS:Class;
+		
 		
 		
 		// Level Preview Images
@@ -74,7 +92,13 @@ package
 		[Embed(source = "assets/gfx/level_previews/level5.png")]
 		public static const LEVEL5PREVIEW:Class;
 		
-		public static const NUMLEVELS:int = 5;
+		[Embed(source = "assets/gfx/level_previews/level6.png")]
+		public static const LEVEL6PREVIEW:Class;
+		
+		[Embed(source = "assets/gfx/level_previews/level7.png")]
+		public static const LEVEL7PREVIEW:Class;
+		
+		public static const NUMLEVELS:int = 7;
 		
 		
 		
@@ -103,6 +127,12 @@ package
 		
 		[Embed(source = "assets/ogmo/level5.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL5:Class;
+		
+		[Embed(source = "assets/ogmo/levelCrateDrop.oel", mimeType = "application/octet-stream")]
+		public static const LEVEL6:Class;
+		
+		[Embed(source = "assets/ogmo/levelCrateParadox.oel", mimeType = "application/octet-stream")]
+		public static const LEVEL7:Class;
 		
 		
 		

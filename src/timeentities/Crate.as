@@ -8,7 +8,8 @@ package timeentities
 	public class Crate extends TimeEntity
 	{
 		
-		protected static const STATE_EXISTS:Number = NUM_BASE_STATES + 0;
+		protected static const STATE_EXISTS:int = NUM_BASE_STATES + 0;
+		protected static const STATE_YSPEED:int = NUM_BASE_STATES + 1;
 		
 		private var sprite:Image;
 		
@@ -30,6 +31,7 @@ package timeentities
 			type = "crate";
 			
 			states.push(new TimeState(numIntervals, true));
+			states.push(new TimeState(numIntervals, false));
 			
 			recordState(0);
 		}
@@ -76,7 +78,7 @@ package timeentities
 				return false;
 			
 			var crate:Crate = collide("crate", x + xmove, y) as Crate;
-			if ((crate) && (crate != this) && (!crate.move(xmove)))
+			if ((crate) && (!crate.move(xmove)))
 				return false;
 			
 			x += xmove;
@@ -111,6 +113,7 @@ package timeentities
 			if (states.length > NUM_BASE_STATES)
 			{
 				if (!states[STATE_EXISTS].recordNumber(frame, exists))	success = false;
+				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))	success = false;
 			}
 			
 			return success;
@@ -121,6 +124,7 @@ package timeentities
 			super.playback(frame);
 			
 			exists = states[STATE_EXISTS].playbackInt(frame);
+			yspeed = states[STATE_YSPEED].playbackInt(frame);
 		}
 		
 		/*override public function recordState(frame:int):Boolean 

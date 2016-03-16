@@ -21,6 +21,9 @@ package menus
 			add(new LevelSelectItem(140, 20, i++, Assets.LEVEL3PREVIEW, Assets.LEVEL3));
 			add(new LevelSelectItem(200, 20, i++, Assets.LEVEL4PREVIEW, Assets.LEVEL4));
 			add(new LevelSelectItem(260, 20, i++, Assets.LEVEL5PREVIEW, Assets.LEVEL5));
+			
+			add(new LevelSelectItem(20, 60, i++, Assets.LEVEL6PREVIEW, Assets.LEVEL6));
+			add(new LevelSelectItem(80, 60, i++, Assets.LEVEL7PREVIEW, Assets.LEVEL7));
 		}
 		
 		override public function add(e:Entity):Entity 
@@ -31,6 +34,7 @@ package menus
 		
 		override public function begin():void 
 		{
+			trace("YO");
 			FP.screen.color = 0x202020;
 			MusicManager.playTrack(MusicManager.LEVELSELECT);
 		}

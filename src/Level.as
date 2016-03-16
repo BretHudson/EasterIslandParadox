@@ -433,8 +433,16 @@ package
 			showFrame(curFrame, curFrameIndex);
 		}
 		
+		public function togglePause():void
+		{
+			paused = !paused;
+		}
+		
 		override public function update():void 
 		{
+			if (Input.pressed("pause"))
+				togglePause();
+			
 			if (paused)
 			{
 				trace("PAUSED");
@@ -474,7 +482,10 @@ package
 				FP.world = Main.levelSelect;
 			}
 			
-			scanlines.noiseAmount = noiseTween.value;
+			CONFIG::release
+			{
+				scanlines.noiseAmount = noiseTween.value;
+			}
 			fxLayer.update();
 			
 			infoBox.update();

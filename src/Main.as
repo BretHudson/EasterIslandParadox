@@ -57,10 +57,7 @@ package
 			
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
-			
-			//FP.world = new Level(Assets.LEVEL2);
-			//FP.world = new Splash();
-			FP.world = new LevelSelect();
+			FP.world = new Splash();
 		}
 		
 		private var loggedIn:Boolean = false;
@@ -103,6 +100,7 @@ package
 			Input.define("escape", Key.ESCAPE);
 			Input.define("jump", Key.UP, Key.W, Key.Z, Key.X, Key.SPACE);
 			
+			Input.define("pause", Key.P);
 			Input.define("mute", Key.M);
 			
 			Input.define("undo", Key.BACKSPACE);
