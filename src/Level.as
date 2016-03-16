@@ -126,10 +126,11 @@ package
 			var offsetY:int = 0;
 			
 			// Add outside border
-			add(new Solid( -16, -16, GAME_WIDTH + 32, 16));
+			
+			/*add(new Solid( -16, -16, GAME_WIDTH + 32, 16));
 			add(new Solid( -16, GAME_HEIGHT, GAME_WIDTH + 32, 16));
 			add(new Solid( -16, 0, 16, GAME_HEIGHT));
-			add(new Solid( GAME_WIDTH, 0, 16, GAME_HEIGHT));
+			add(new Solid( GAME_WIDTH, 0, 16, GAME_HEIGHT));*/
 			
 			// Level data
 			numIntervals = int(ogmoXML.@intervals);
@@ -591,7 +592,6 @@ package
 		private function completeState():void
 		{
 			FP.console.log("Level " + id + " complete!");
-			trace(id, Main.levelSelect.levelSelectItems.length);
 			if (id < Main.levelSelect.levelSelectItems.length)
 				FP.world = new Level(Main.levelSelect.levelSelectItems[id].level, id + 1);
 			else
