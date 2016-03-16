@@ -13,6 +13,10 @@ package
 	
 	// TODO: Look into http://divillysausages.com/2011/04/04/as3-conditional-compilation-or-ifdef-in-flash/
 	
+	
+	// http://www.dafont.com/sd-auto-pilot.font?text=Easter+Island+Paradox SIGNS
+	
+	
 	// TODO: Make it so the world is only offset by -8, -8
 	// TODO: Make a "Slowdown" effect where you only update the entities every x frames
 	[Frame(factoryClass = "Preloader")]
@@ -20,12 +24,12 @@ package
 	{
 		
 		// Font
-		[Embed(source = "assets/04b_25__.ttf", embedAsCFF = "false", fontFamily = "04B25")]
+		[Embed(source = "assets/gabs_pixel.ttf", embedAsCFF = "false", fontFamily = "04B25")]
 		public static const FONT:Class;
 		
 		private var scale:int = 2;
 		
-		private var idi:IDI;
+		public static var idi:IDI;
 		
 		public static var mainmenu:Menu;
 		public static var levelSelect:LevelSelect;
@@ -44,6 +48,7 @@ package
 			Assets.init();
 			Effects.init();
 			MusicManager.init();
+			SaveState.init();
 			
 			defineControls();
 			

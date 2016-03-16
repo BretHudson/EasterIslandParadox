@@ -2,18 +2,22 @@ package timeentities
 {
 	import flash.display.BitmapData;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Spritemap;
 	
 	public class Goal extends TimeEntity
 	{
 		
-		private var sprite:Image;
+		private var sprite:Spritemap;
 		
 		public function Goal(x:int, y:int, numIntervals:int) 
 		{
 			super(x, y, numIntervals);
 			
-			sprite = new Image(new BitmapData(24, 32, true, 0xFF0000FF))
+			sprite = new Spritemap(Assets.GOAL, 32, 32);
 			sprite.centerOO();
+			sprite.add("idle", [0]);
+			sprite.add("close", [0, 1, 2, 3, 4], 10);
+			sprite.play("idle");
 			sprites.add(sprite);
 			
 			setHitbox(24, 32, 12, 16);

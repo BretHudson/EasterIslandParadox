@@ -42,7 +42,7 @@ package menus
 			{
 				if (Input.pressed("undo"))
 				{
-					SaveState.levelComplete(100);
+					SaveState.levelsCompleted = 100;
 					FP.console.log("All levels unlocked");
 				}
 			}

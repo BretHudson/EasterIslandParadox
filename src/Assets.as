@@ -14,11 +14,17 @@ package
 		[Embed(source = "assets/gfx/player_mask.png")]
 		public static const PLAYERMASK:Class;
 		
+		[Embed(source = "assets/gfx/death.png")]
+		public static const PLAYERDEATH:Class;
+		
 		[Embed(source = "assets/gfx/antenna.png")]
 		public static const ANTENNA:Class;
 		
 		[Embed(source = "assets/gfx/door.png")]
 		public static const DOOR:Class;
+		
+		[Embed(source = "assets/gfx/goal.png")]
+		public static const GOAL:Class;
 		
 		[Embed(source = "assets/gfx/crate.png")]
 		public static const CRATE:Class;
@@ -38,6 +44,18 @@ package
 		[Embed(source = "assets/gfx/tutorial.png")]
 		public static const TUTORIAL:Class;
 		
+		[Embed(source = "assets/gfx/cannonbase.png")]
+		public static const MISSILELAUNCHER:Class;
+		
+		[Embed(source = "assets/gfx/cannonbasedark.png")]
+		public static const MISSILELAUNCHERDARK:Class;
+		
+		[Embed(source = "assets/gfx/rocket.png")]
+		public static const MISSILE:Class;
+		
+		[Embed(source = "assets/gfx/explosion.png")]
+		public static const EXPLOSION:Class;
+		
 		
 		
 		// Level Preview Images
@@ -55,6 +73,8 @@ package
 		
 		[Embed(source = "assets/gfx/level_previews/level5.png")]
 		public static const LEVEL5PREVIEW:Class;
+		
+		public static const NUMLEVELS:int = 5;
 		
 		
 		

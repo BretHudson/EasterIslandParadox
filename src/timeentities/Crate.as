@@ -8,9 +8,14 @@ package timeentities
 	public class Crate extends TimeEntity
 	{
 		
+		protected static const STATE_EXISTS:Number = NUM_BASE_STATES + 0;
+		
 		private var sprite:Image;
 		
 		private var yspeed:Number = 0;
+		
+		private const EXISTNUM:int = 21;
+		private var exists:int = EXISTNUM;
 		
 		public function Crate(x:int, y:int, numIntervals:int) 
 		{
@@ -24,6 +29,8 @@ package timeentities
 			setHitbox(16, 16);
 			type = "crate";
 			
+			states.push(new TimeState(numIntervals, true));
+			
 			recordState(0);
 		}
 		
@@ -31,6 +38,24 @@ package timeentities
 		{
 			yspeed += Player.gspeed;
 			checkFalling();
+			
+			if (exists < EXISTNUM)
+			{
+				--exists;
+			}
+			
+			collidable = (exists > 0);
+		}
+		
+		override public function render():void 
+		{
+			if (exists > 0)
+				super.render();
+		}
+		
+		public function destroy():void
+		{
+			--exists;
 		}
 		
 		private function collideWithSolidY(yy:int):Entity
@@ -39,6 +64,8 @@ package timeentities
 			e = collide("solid", x, yy)
 			if (e)	return e;
 			e = collide("crate", x, yy)
+			if (e)	return e;
+			e = collide("player", x, yy)
 			if (e)	return e;
 			return e;
 		}
@@ -75,6 +102,25 @@ package timeentities
 					break;
 				}
 			}
+		}
+		
+		override public function recordState(frame:int):Boolean 
+		{
+			var success:Boolean = super.recordState(frame);
+			
+			if (states.length > NUM_BASE_STATES)
+			{
+				if (!states[STATE_EXISTS].recordNumber(frame, exists))	success = false;
+			}
+			
+			return success;
+		}
+		
+		override public function playback(frame:int):void 
+		{
+			super.playback(frame);
+			
+			exists = states[STATE_EXISTS].playbackInt(frame);
 		}
 		
 		/*override public function recordState(frame:int):Boolean 

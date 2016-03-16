@@ -221,8 +221,23 @@ package
 				++doorID;
 			}
 			
+			// Missiles
+			for each (node in ogmoXML.Entities.MissileLauncher)
+			{
+				addTimeEntity(new MissileLauncher(int(node.@x) + offsetX, int(node.@y) + offsetY, numIntervals));
+			}
+			
 			// Goal
-			add(new Goal(ogmoXML.Entities.Goal.@x, ogmoXML.Entities.Goal.@y, numIntervals));
+			for each (node in ogmoXML.Entities.Goal)
+			{
+				trace("GOAL");
+				add(new Goal(ogmoXML.Entities.Goal.@x, ogmoXML.Entities.Goal.@y, numIntervals));
+			}
+			for each (node in ogmoXML.Entities.GoalOffset)
+			{
+				trace("GOAL OFFFSET");
+				add(new Goal(int(ogmoXML.Entities.GoalOffset.@x) + 8, ogmoXML.Entities.GoalOffset.@y, numIntervals));
+			}
 			
 			// Player
 			player = new Player(int(ogmoXML.Entities.Player.@x) + offsetX, int(ogmoXML.Entities.Player.@y) + offsetY, numIntervals);
@@ -423,6 +438,11 @@ package
 			if (paused)
 			{
 				trace("PAUSED");
+				return;
+			}
+			
+			if ((Main.idi.idnet) && (Main.idi.idnet.InterfaceOpen()))
+			{
 				return;
 			}
 			
@@ -659,7 +679,7 @@ package
 		
 		public function playerReachedGoal():void
 		{
-			SaveState.levelComplete(id);
+			SaveState.levelComplete(id, curFrameIndex);
 			state = STATE_COMPLETE;
 			setAllEntitiesActive(false);
 			noiseAdd();
