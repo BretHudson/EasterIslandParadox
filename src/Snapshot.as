@@ -80,9 +80,9 @@ package
 		override public function render():void 
 		{
 			if (selectedOne == this)
-				Draw.rectPlus(x, y, width, height, 0x008800, 1, false, 2);
+				Draw.rectPlus(x, y, width, height, 0x00FF78, 1, false, 4);
 			else if ((listeningToMouse) && (mouseHover()))
-				Draw.rectPlus(x, y, width, height, 0xFFFF00, 1, false, 2);
+				Draw.rectPlus(x, y, width, height, 0xFFFF00, 1, false, 4);
 			
 			if (graphiclist.count >= 1)
 			{

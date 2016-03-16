@@ -6,6 +6,7 @@ package
 	import flash.geom.Rectangle;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.TiledImage;
 	import net.flashpunk.graphics.Tilemap;
 	import net.flashpunk.tweens.misc.NumTween;
 	import net.flashpunk.utils.Draw;
@@ -79,9 +80,20 @@ package
 		
 		private var id:int;
 		
+		public static var infoBox:InfoBox;
+		
+		private var gameBorder:Image;
+		private var gameBorderPoint:Point;
+		
+		private var cloud_bg:TiledImage;
+		private var cloud_x_start:int;
+		
 		public function Level(ogmoFile:Class, id:int) 
 		{
 			this.id = id;
+			
+			if (infoBox == null)
+				infoBox = new InfoBox();
 			
 			initIntervals();
 			
@@ -115,6 +127,14 @@ package
 			
 			noiseTween = new NumTween();
 			noiseTween.value = noiseMax;
+			
+			gameBorder = new Image(Assets.GAME_BORDER);
+			gameBorderPoint = new Point( -24, -24);
+			
+			cloud_x_start = (((id * id)) * 100) / id;
+			cloud_x_start %= 640;
+			cloud_x_start *= -1;
+			trace(cloud_x_start);
 		}
 		
 		private function loadFromOgmo(ogmoLevel:Class):void
@@ -127,13 +147,32 @@ package
 			
 			// Add outside border
 			
-			/*add(new Solid( -16, -16, GAME_WIDTH + 32, 16));
+			add(new Solid( -16, -16, GAME_WIDTH + 32, 16));
 			add(new Solid( -16, GAME_HEIGHT, GAME_WIDTH + 32, 16));
 			add(new Solid( -16, 0, 16, GAME_HEIGHT));
-			add(new Solid( GAME_WIDTH, 0, 16, GAME_HEIGHT));*/
+			add(new Solid( GAME_WIDTH, 0, 16, GAME_HEIGHT));
 			
 			// Level data
 			numIntervals = int(ogmoXML.@intervals);
+			
+			// Background Tilemap
+			// BGlayer
+			var BGtilemapStr:String = ogmoXML.BGlayer;
+			var BGtilemap:Tilemap = null;
+			
+			if (ogmoXML.Tilemap.@tileset == "Tilemap 1")
+			{
+				addGraphic(Image.createRect(GAME_WIDTH, GAME_HEIGHT, Assets.TILESET1COLOR));
+				addGraphic(cloud_bg = new TiledImage(Assets.CLOUD_BG, 640 * 3, GAME_HEIGHT));
+				BGtilemap = new Tilemap(Assets.TILESET1, Level.GAME_WIDTH, Level.GAME_HEIGHT, 16, 16);
+			}
+			
+			if (BGtilemap)
+			{
+				BGtilemap.loadFromString(BGtilemapStr, ",");
+				//Assets.tileset1.setTile(0, 0, 0);
+				addGraphic(BGtilemap);
+			}
 			
 			// Tilemap
 			var tilemapStr:String = ogmoXML.Tilemap;
@@ -141,15 +180,14 @@ package
 			
 			if (ogmoXML.Tilemap.@tileset == "Tilemap 1")
 			{
-				addGraphic(Image.createRect(GAME_WIDTH, GAME_HEIGHT, Assets.TILESET1COLOR));
-				tilemap = Assets.tileset1;
+				tilemap = new Tilemap(Assets.TILESET1, Level.GAME_WIDTH, Level.GAME_HEIGHT, 16, 16);
 			}
 			
 			if (tilemap)
 			{
 				tilemap.loadFromString(tilemapStr, ",");
 				//Assets.tileset1.setTile(0, 0, 0);
-				addGraphic(Assets.tileset1);
+				addGraphic(tilemap);
 			}
 			
 			// Solids
@@ -208,12 +246,22 @@ package
 			
 			var padding:int = 4;
 			var equalWidth:Number = (GAME_WIDTH - padding * 2) / numIntervals;
-			var leftX:int = (GAME_WIDTH * 0.5) - equalWidth * (Number(numIntervals) * 0.5) + padding;
 			
 			// First get height and see if it's alright
 			var snapshotWidth:int = equalWidth - (padding * 2);
 			Snapshot.scale = snapshotWidth / GAME_WIDTH;
 			var snapshotHeight:int = Math.round(Number(GAME_HEIGHT) * Snapshot.scale);
+			var maxHeight:int = 40;
+			
+			if (snapshotHeight > maxHeight)
+			{
+				snapshotHeight = maxHeight;
+				Snapshot.scale = snapshotHeight / GAME_HEIGHT;
+				snapshotWidth = Math.round(Number(GAME_WIDTH) * Snapshot.scale);
+				equalWidth = snapshotWidth + (padding * 2);
+			}
+			
+			var leftX:int = (GAME_WIDTH * 0.5) - equalWidth * (Number(numIntervals) * 0.5) + padding;
 			
 			var snapshot:Snapshot;
 			for (var j:int = 0; j < numIntervals; ++j)
@@ -408,6 +456,15 @@ package
 			
 			scanlines.noiseAmount = noiseTween.value;
 			fxLayer.update();
+			
+			infoBox.update();
+			
+			setCloudsPosition();
+		}
+		
+		private function setCloudsPosition():void
+		{
+			cloud_bg.x = -(curFrame / 3) + cloud_x_start;
 		}
 		
 		public function thinkState():void
@@ -647,15 +704,18 @@ package
 			// Screenshot background
 			Draw.rect(0, GAME_HEIGHT, GAME_WIDTH, 300 - GAME_HEIGHT - 48, 0xFFFFFF);
 			
-			// Game area background
-			if (hoveringOverGame)
-			{
-				Draw.rect(-4, -4, GAME_WIDTH + 8, GAME_HEIGHT + 8, 0x00FFFF);
-			}
-			
 			super.render();
 			
-			//Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
+			if (screenshots[0] == null)
+			{
+				takeScreenshot(0);
+			}
+			
+			if (timeToTakeScreenshot)
+			{
+				takeScreenshot(curInterval + 1);
+				timeToTakeScreenshot = false;
+			}
 			
 			switch (state)
 			{
@@ -669,19 +729,20 @@ package
 					break;
 			}
 			
-			if (screenshots[0] == null)
+			// Game area background
+			if ((hoveringOverGame) && (state == STATE_THINKING))
 			{
-				takeScreenshot(0);
+				Draw.rectPlus(4, 4, GAME_WIDTH - 8, GAME_HEIGHT - 8, 0xF6FB60, 1, false, 4);
 			}
 			
-			if (timeToTakeScreenshot)
-			{
-				takeScreenshot(curInterval + 1);
-				timeToTakeScreenshot = false;
-			}
+			//Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
 			
 			// TODO: Fix noise/scanlines
 			scanlines.applyTo(FP.buffer, gameAreaRect);
+			
+			gameBorder.render(FP.buffer, gameBorderPoint, FP.camera);
+			
+			infoBox.render();
 			
 			//Draw.text(curFrameIndex.toString(), 2, 2);
 			

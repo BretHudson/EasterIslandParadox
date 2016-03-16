@@ -35,11 +35,6 @@ package
 			recordState(0);
 		}
 		
-		override public function update():void 
-		{
-			super.update();
-		}
-		
 		override public function render():void 
 		{
 			var alphaSpeed:Number = 0.5;

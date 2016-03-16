@@ -298,6 +298,7 @@
 				for (x = 0; x < cols; x ++)
 				{
 					if (col[x] == '') continue;
+					clearTile(x, y);
 					if (col[x] != '-1')
 						setTile(x, y, uint(col[x]));
 				}

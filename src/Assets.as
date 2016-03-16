@@ -29,6 +29,15 @@ package
 		[Embed(source = "assets/gfx/slope_right.png")]
 		public static const SLOPE_RIGHT:Class;
 		
+		[Embed(source = "assets/gfx/cloud_bg.png")]
+		public static const CLOUD_BG:Class;
+		
+		[Embed(source = "assets/gfx/game-border.png")]
+		public static const GAME_BORDER:Class;
+		
+		[Embed(source = "assets/gfx/tutorial.png")]
+		public static const TUTORIAL:Class;
+		
 		
 		
 		// Level Preview Images
@@ -50,10 +59,9 @@ package
 		
 		
 		// Tilesets
-		[Embed(source = "assets/gfx/tileset1.png")]
+		[Embed(source = "assets/gfx/easterislandhead.png")]
 		public static const TILESET1:Class;
-		public static const TILESET1COLOR:uint = 0x0A0A0F;
-		public static var tileset1:Tilemap = new Tilemap(TILESET1, Level.GAME_WIDTH, Level.GAME_HEIGHT, 16, 16);
+		public static const TILESET1COLOR:uint = 0x00FF78;
 		
 		
 		
@@ -86,10 +94,10 @@ package
 		public static const LEVELSELECT:Class;
 		
 		[Embed(source = "assets/music/Here's to Hope (World 1).mp3")]
-		public static const WORLD1:Class;
+		public static const WORLD2:Class;
 		
 		[Embed(source = "assets/music/Interesting Islands (World 2).mp3")]
-		public static const WORLD2:Class;
+		public static const WORLD1:Class;
 		
 		[Embed(source = "assets/music/Moai Mystery (World 3).mp3")]
 		public static const WORLD3:Class;

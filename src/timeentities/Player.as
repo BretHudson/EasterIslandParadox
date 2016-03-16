@@ -29,7 +29,7 @@ package timeentities
 		private var fspeed:Number = 0.5;
 		private var mspeed:Number = 2.0;
 		
-		private var gspeed:Number = 0.2;
+		public static const gspeed:Number = 0.2;
 		private var jspeed:Number = -4.2;
 		private var djspeed:Number = -3.8;
 		private var hasDoubleJumped:Boolean = true;

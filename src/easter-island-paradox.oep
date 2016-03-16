@@ -28,6 +28,18 @@
     <ValueDefinition xsi:type="IntValueDefinition" Name="intervals" Default="1" Min="1" Max="7" ShowSlider="true" />
   </LevelValueDefinitions>
   <LayerDefinitions>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>BGlayer</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
+    </LayerDefinition>
     <LayerDefinition xsi:type="EntityLayerDefinition">
       <Name>Entities</Name>
       <Grid>
@@ -55,7 +67,7 @@
   <Tilesets>
     <Tileset>
       <Name>Tilemap 1</Name>
-      <FilePath>assets\gfx\tileset1.png</FilePath>
+      <FilePath>assets\gfx\easterislandhead.png</FilePath>
       <TileSize>
         <Width>16</Width>
         <Height>16</Height>

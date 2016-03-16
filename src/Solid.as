@@ -15,7 +15,7 @@ package
 			
 			layer = -100;
 			
-			graphic = Image.createRect(w, h, 0xFF00FF, 0.3);
+			//graphic = Image.createRect(w, h, 0xFF00FF, 0.3);
 		}
 		
 	}

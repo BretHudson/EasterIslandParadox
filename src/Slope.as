@@ -14,7 +14,7 @@ package
 			var m:Class = ((dir == -1) ? Assets.SLOPE_LEFT : Assets.SLOPE_RIGHT);
 			mask = new Pixelmask(m);
 			
-			graphic = new Image(m);
+			//graphic = new Image(m);
 			
 			type = "solid";
 		}

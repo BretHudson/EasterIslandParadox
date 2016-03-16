@@ -108,7 +108,6 @@ package timeentities {
 			{
 				closeSfx.play();
 			}
-			trace(open, "Time to toggle!");
 		}
 		
 	}
