@@ -74,6 +74,8 @@ package
 		{
 			if ((!loggedIn) && (idi) && (idi.idnet))
 			{
+				//idi.idnet.autoLogin();
+				
 				loggedIn = true;
 				//idi.idnet.toggleInterface('registration');
 				

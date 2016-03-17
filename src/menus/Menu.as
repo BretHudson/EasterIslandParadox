@@ -47,21 +47,24 @@ package menus
 			play.setHitbox(playText.width, playText.height, playText.width * 0.5, playText.height * 0.5);
 			
 			idLogo = new Image(Assets.IDNETLOGO);
+			idLogo.centerOO();
 			idnetLogo = addGraphic(idLogo);
-			idnetLogo.setHitbox(idLogo.width, idLogo.height);
-			idnetLogo.x = 200 - (idLogo.width * 0.5) + 40;
-			idnetLogo.y = 230;// (300 - idLogo.height) - 10;
+			idnetLogo.setHitbox(idLogo.width, idLogo.height, idLogo.width * 0.5, 13);
+			idnetLogo.x = 200;
+			idnetLogo.y = 249;// (300 - idLogo.height) - 10;
 			
-			loginText = new Text("Login with", 140, 245);
+			loginText = new Text(" Loading...", 138, 244);
 			loginText.size = 16;
+			loginText.color = 0x000000;
 			addGraphic(loginText);
 			
 			logo.centerOO();
 			logo.x = 200;
 			logo.y = 65;
 			
-			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0", 30, 275);
+			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0.2", 200, 283);
 			text.size = 16;
+			text.centerOO();
 			addGraphic(text);
 			
 			Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0x000000, 0xFFFFFF, false, true, false);
@@ -77,7 +80,7 @@ package menus
 		{
 			super.render();
 			
-			//Draw.hitbox(play, true, 0xFF0000);
+			//Draw.hitbox(idnetLogo, true, 0xFF0000);
 		}
 		
 		override public function update():void 
@@ -92,12 +95,23 @@ package menus
 			if (cloudsBack.x < -400) cloudsBack.x += 400;
 			if (cloudsFront.x < -400) cloudsFront.x += 400;
 			
-			idLogo.blend = null;
-			idLogo.color = 0xFFFFFF;
+			idLogo.color = 0xDDDDDD;
 			
-			if ((Main.idi.idnet) && (Main.idi.idnet.InterfaceOpen()))
+			if (Main.idi.idnet)
 			{
-				return;
+				if (Main.idi.idnet.isLoggedIn)
+				{
+					loginText.text = "   Log out";
+				}
+				else
+				{
+					loginText.text = "Login with";
+				}
+				
+				if (Main.idi.idnet.InterfaceOpen())
+				{
+					return;
+				}
 			}
 			
 			if (play.collidePoint(play.x, play.y, Input.mouseX, Input.mouseY))
@@ -119,13 +133,17 @@ package menus
 			{
 				Input.mouseCursor = MouseCursor.BUTTON;
 				
-				idLogo.blend = BlendMode.LIGHTEN;
-				idLogo.color = 0x888888;
+				idLogo.color = 0xFFFFFF;
 				
 				if (Input.mousePressed)
 				{
 					if (Main.idi.idnet)
-						Main.idi.idnet.toggleInterface('registration');
+					{
+						if (Main.idi.idnet.isLoggedIn)
+							Main.idi.idnet.logout();
+						else
+							Main.idi.idnet.toggleInterface('registration');
+					}
 				}
 			}
 			

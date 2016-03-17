@@ -77,6 +77,9 @@ package
 		[Embed(source = "assets/gfx/idnet.png")]
 		public static const IDNETLOGO:Class;
 		
+		[Embed(source = "assets/gfx/achievements-button.png")]
+		public static const ACHIEVEMENTS_BUTTON:Class;
+		
 		
 		
 		// Level Preview Images

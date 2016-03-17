@@ -24,13 +24,16 @@ package
 				levelsCompleted = id;
 			}
 			
-			if (id == 4)
+			if (Main.idi.idnet)
 			{
-				Main.idi.idnet.achievementsSave(IDI.achievement1Name, IDI.achievement1Key, '');
-			}
-			else if (id == 8)
-			{
-				Main.idi.idnet.achievementsSave(IDI.achievement2Name, IDI.achievement2Key, '');
+				if (id == 4)
+				{
+					Main.idi.idnet.achievementsSave(IDI.achievement1Name, IDI.achievement1Key, '');
+				}
+				else if (id == 8)
+				{
+					Main.idi.idnet.achievementsSave(IDI.achievement2Name, IDI.achievement2Key, '');
+				}
 			}
 			
 			submitTime(id - 1, frameCount);
@@ -43,9 +46,19 @@ package
 		
 		private static function submitTime(id:int, frameCount:int):void
 		{
-			var score:Number = Number(frameCount) / 60.0;
-			fastestTimes[id] = score;
-			Main.idi.idnet.advancedScoreSubmitList(score * 1000, "Level " + String(id + 1) + " Highscores", "BretHudson", false, false, true);
+			if (Main.idi.idnet)
+			{
+				var score:Number = Number(frameCount) / 60.0;
+				fastestTimes[id] = score;
+				var name:String = null;
+				
+				if (Main.idi.idnet.isLoggedIn)
+				{
+					name = Main.idi.idnet.userData.nickname;
+				}
+				
+				Main.idi.idnet.advancedScoreSubmitList(score * 1000, "Level " + String(id + 1) + " Highscores", name, false, false, true);
+			}
 			
 			// TODO: Send it off
 		}

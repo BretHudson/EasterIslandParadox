@@ -5,7 +5,9 @@ package menus
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.World;
+	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Text;
+	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
 	
 	public class LevelSelect extends World
@@ -18,6 +20,7 @@ package menus
 		private var y:int = 140;
 		
 		private var text:Text = new Text("Level Select");
+		private var button:Entity;
 		
 		public function LevelSelect() 
 		{
@@ -39,6 +42,14 @@ package menus
 			text.x = 206;
 			text.y = 80;
 			addGraphic(text);
+			
+			var buttonImg:Image = new Image(Assets.ACHIEVEMENTS_BUTTON);
+			buttonImg.centerOO();
+			button = addGraphic(buttonImg);
+			button.x = 200;
+			button.y = 265;
+			button.setHitbox(buttonImg.width + 1, buttonImg.height);
+			button.centerOrigin();
 			
 			Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0xFFFFFF, 0x01FF78, false, true, false);
 		}
@@ -69,6 +80,14 @@ package menus
 		{
 			Input.mouseCursor = MouseCursor.ARROW;
 			
+			if (Main.idi.idnet)
+			{
+				if (Main.idi.idnet.InterfaceOpen())
+				{
+					return;
+				}
+			}
+			
 			super.update();
 			CONFIG::debug
 			{
@@ -82,6 +101,23 @@ package menus
 			if (Input.pressed("escape"))
 			{
 				FP.world = Main.mainmenu;
+			}
+			
+			Image(button.graphic).color = 0xDDDDDD;
+			
+			if (button.collidePoint(button.x, button.y, Input.mouseX, Input.mouseY))
+			{
+				Input.mouseCursor = MouseCursor.BUTTON;
+				
+				Image(button.graphic).color = 0xFFFFFF;
+				
+				if (Input.mousePressed)
+				{
+					if (Main.idi.idnet)
+					{
+						Main.idi.idnet.toggleInterface("achievements");
+					}
+				}
 			}
 		}
 		
