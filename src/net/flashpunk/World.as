@@ -2,6 +2,7 @@
 {
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import menus.Button;
 
 	/**
 	 * Updated by Engine, main game container that holds all currently active Entities.
@@ -18,6 +19,8 @@
 		 * Point used to determine drawing offset in the render loop.
 		 */
 		public var camera:Point = new Point;
+		
+		public var buttons:Vector.<Button> = new Vector.<Button>();
 		
 		/**
 		 * Constructor.

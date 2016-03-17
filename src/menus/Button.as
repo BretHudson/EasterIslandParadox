@@ -1,5 +1,6 @@
 package menus 
 {
+	import flash.ui.MouseCursor;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Input;
@@ -13,38 +14,62 @@ package menus
 		
 		private var sprite:Spritemap;
 		private var buttonID:int;
+		private var tint:uint;
+		private var hoverTint:uint;
 		
-		public function Button(x:int, y:int, button:int, tint:uint) 
+		public function Button(x:int, y:int, button:int, tint:uint, hoverTint:uint) 
 		{
 			super(x, y);
 			
 			buttonID = button;
 			
+			trace("BUTTON", button);
+			
 			sprite = new Spritemap(Assets.BUTTONS, 16, 16);
-			sprite.add("frame", [buttonID], 1);
+			sprite.add("frame", [button], 1);
 			sprite.play("frame");
 			sprite.color = tint;
 			graphic = sprite;
+			
+			this.tint = tint;
+			this.hoverTint = hoverTint;
+			
+			layer = -1000000;
 			
 			setHitbox(16, 16);
 		}
 		
 		override public function update():void 
 		{
-			if ((Input.mousePressed) && (collidePoint(x, y, Input.mouseX + world.camera.x, Input.mouseY + world.camera.y)))
+			if (collidePoint(x, y, Input.mouseX + world.camera.x, Input.mouseY + world.camera.y))
 			{
-				switch (buttonID)
+				sprite.color = hoverTint;
+				Input.mouseCursor = MouseCursor.BUTTON;
+				
+				if (Input.mousePressed)
 				{
-					case PAUSE:
-						Level(world).togglePause();
-						break;
-					case MUTE:
-						MusicManager.toggleMute();
-						break;
-					case HELP:
-						// TODO:
-						break;
+					switch (buttonID)
+					{
+						case PAUSE:
+							Level(world).togglePause();
+							break;
+						case MUTE:
+							MusicManager.toggleMute();
+							break;
+						case HELP:
+							// TODO:
+							break;
+					}
 				}
+			}
+			else
+			{
+				sprite.color = tint;
+			}
+			
+			if (buttonID == MUTE)
+			{
+				sprite.frame = ((MusicManager.mute) ? 1 : 3);
 			}
 		}
 		

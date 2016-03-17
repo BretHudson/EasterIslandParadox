@@ -44,7 +44,8 @@ package timeentities
 		private var antenna:Spritemap;
 		
 		private var inAir:Boolean = false;
-		public var dead:int = -1;
+		public var deadCount:int = -1;
+		private var died:Boolean = false;
 		private var killedByDoor:Boolean = false;
 		
 		// TODO: Possibly create a state machine for that nifty antenna
@@ -91,6 +92,8 @@ package timeentities
 			states.push(new TimeState(numIntervals, true)); // DEAD
 			states.push(new TimeState(numIntervals, true)); // DEATH_FRAME
 			
+			deadCount = -1;
+			
 			recordState(0);
 		}
 		
@@ -107,6 +110,11 @@ package timeentities
 		// TODO: Jump input buffering!
 		override public function update():void 
 		{
+			if (deadCount != -1)
+			{
+				return;
+			}
+			
 			super.update();
 			
 			// Input
@@ -269,19 +277,24 @@ package timeentities
 			if (jumpInputBuffering > 0)
 				--jumpInputBuffering;
 			
-			if (dead > 0)
-				--dead;
+			if (died)
+			{
+				if (deadCount > 0)
+					--deadCount;
+			}
+			else
+				deadCount = -1;
 		}
 		
 		public function die(fromDoor:Boolean = false):void
 		{
 			if (fromDoor)
 			{
-				//
+				deadCount = 0;
 			}
 			else
 			{
-				//
+				deadCount = 0;
 			}
 		}
 		
@@ -305,7 +318,7 @@ package timeentities
 				if (!states[STATE_SCALEX].recordNumber(frame, sprite.scaleX))			success = false;
 				if (!states[STATE_FRAME].recordInt(frame, sprite.frame))				success = false;
 				if (!states[STATE_ANTENNA_FRAME].recordInt(frame, antenna.frame))		success = false;
-				if (!states[STATE_DEAD].recordInt(frame, dead))							success = false;
+				if (!states[STATE_DEAD].recordInt(frame, deadCount))							success = false;
 				if (!states[STATE_DEATH_FRAME].recordInt(frame, deathSprite.frame))	success = false;
 			}
 			
@@ -322,18 +335,27 @@ package timeentities
 			antenna.scaleX = sprite.scaleX = states[STATE_SCALEX].playbackNumber(frame);
 			sprite.frame = states[STATE_FRAME].playbackInt(frame);
 			antenna.frame = states[STATE_ANTENNA_FRAME].playbackInt(frame);
-			dead = states[STATE_DEAD].playbackInt(frame);
+			if (died)
+				deadCount = states[STATE_DEAD].playbackInt(frame);
+			else
+				deadCount = -1;
 			deathSprite.frame = states[STATE_DEATH_FRAME].playbackInt(frame);;
 			
 			positionAntenna();
+		}
+		
+		override public function undo(frame:int):void 
+		{
+			super.undo(frame);
+			died = false;
 		}
 		
 		override public function render():void 
 		{
 			if (killedByDoor)
 			{
-				sprite.alpha = ((dead == -1) ? 0 : 1);
-				deathSprite.alpha = ((dead == -1) ? 1 : 0);
+				sprite.alpha = ((deadCount == -1) ? 0 : 1);
+				deathSprite.alpha = ((deadCount == -1) ? 1 : 0);
 				deathSprite.scaleX = sprite.scaleX;
 			}
 			else

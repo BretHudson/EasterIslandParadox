@@ -72,6 +72,12 @@ package timeentities {
 			{
 				setHitbox(6, 32, -5);
 			}
+			
+			var p:Player = collide("player", x, y) as Player;
+			if (p)
+			{
+				p.die(true);
+			}
 		}
 		
 		override public function recordState(frame:int):Boolean 

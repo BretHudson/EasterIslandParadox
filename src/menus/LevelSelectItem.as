@@ -3,6 +3,7 @@ package menus
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.ui.MouseCursor;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Graphiclist;
@@ -40,6 +41,12 @@ package menus
 		
 		override public function update():void 
 		{
+			if (mouseHover())
+			{
+				if (image.color != 0x666666)
+					Input.mouseCursor = MouseCursor.BUTTON;
+			}
+			
 			if ((Input.mousePressed) && (mouseHover()) && (SaveState.isLevelUnlockedBase0(id)))
 			{
 				FP.world = new Level(level, id + 1);

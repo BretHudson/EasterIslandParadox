@@ -4,6 +4,7 @@ package
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.MouseCursor;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.TiledImage;
@@ -33,6 +34,7 @@ package
 		public static const STATE_RECORDING:int = 3;
 		public static const STATE_PARADOX:int = 4;
 		public static const STATE_COMPLETE:int = 5;
+		public static const STATE_DEAD:int = 6;
 		
 		public var state:int = STATE_THINKING;
 		
@@ -126,15 +128,24 @@ package
 			gameAreaRect = new Rectangle(24, 24, GAME_WIDTH, GAME_HEIGHT);
 			
 			noiseTween = new NumTween();
-			noiseTween.value = noiseMax;
+			CONFIG::debug
+			{
+				scanlines.noiseAmount = 0;
+			}
+			CONFIG::release
+			{
+				noiseTween.value = noiseMax;
+			}
 			
 			gameBorder = new Image(Assets.GAME_BORDER);
 			gameBorderPoint = new Point( -24, -24);
+			addGraphic(gameBorder, -10000, gameBorderPoint.x, gameBorderPoint.y);
 			
 			cloud_x_start = (((id * id)) * 100) / id;
 			cloud_x_start %= 640;
 			cloud_x_start *= -1;
-			trace(cloud_x_start);
+			
+			Main.addIconsToWorld(this, 400 - 40, -20, 0x000000, 0x01FF78, true, true, false);
 		}
 		
 		private function loadFromOgmo(ogmoLevel:Class):void
@@ -346,6 +357,23 @@ package
 			noiseRemove();
 		}
 		
+		private function isPlayerDead(endFrame:Boolean):void
+		{
+			var dead:Boolean = false;
+			
+			if (endFrame)
+				dead = (player.deadCount != -1);
+			else
+				dead = (player.deadCount == 0);
+			
+			if (dead)
+			{
+				noiseAdd();
+				setAllEntitiesActive(false);
+				state = STATE_DEAD;
+			}
+		}
+		
 		public function recordState(checkForEnd:Boolean = true):void
 		{
 			for (var i:int = 0; i < timeEntities.length; ++i)
@@ -367,15 +395,19 @@ package
 				{
 					endRecording();
 					state = STATE_PARADOX;
+					isPlayerDead(true);
 					return;
 				}
 				
 				if (curFrame % TimeState.FRAMES_PER_INTERVAL == 0)
 				{
 					endRecording();
+					isPlayerDead(true);
 					return;
 				}
 			}
+			
+			isPlayerDead(false);
 			
 			++curFrame;
 			++curFrameIndex;
@@ -440,11 +472,20 @@ package
 		
 		override public function update():void 
 		{
+			Input.mouseCursor = MouseCursor.ARROW;
+			
 			if (Input.pressed("pause"))
 				togglePause();
 			
+			for (var i:int = 0; i < buttons.length; ++i)
+			{
+				buttons[i].update();
+			}
+			
 			if (paused)
 			{
+				if (Input.mousePressed)
+					paused = false;
 				trace("PAUSED");
 				return;
 			}
@@ -474,6 +515,9 @@ package
 					break;
 				case STATE_COMPLETE:
 					completeState();
+					break;
+				case STATE_DEAD:
+					deadState();
 					break;
 			}
 			
@@ -522,10 +566,15 @@ package
 				intervalHovering = -1;
 				//showFrameAtInterval(selectedSnapshotIndex);
 			}
+			else
+				Input.mouseCursor = MouseCursor.BUTTON;
 			
 			var mouseX:int = Input.mouseX + camera.x;
 			var mouseY:int = Input.mouseY + camera.y;
 			hoveringOverGame = ((mouseX >= 0) && (mouseX < GAME_WIDTH) && (mouseY >= 0) && (mouseY < GAME_HEIGHT));
+			
+			if (hoveringOverGame)
+				Input.mouseCursor = MouseCursor.BUTTON;
 			
 			// Get input
 			if (Input.mousePressed)
@@ -688,6 +737,24 @@ package
 			// TODO: Go to next level
 		}
 		
+		private function deadState():void
+		{
+			if (Input.pressed("undo"))
+			{
+				state = STATE_UNDO;
+				undoFirst = intervalsEntered[intervalsEntered.length - 1] * TimeState.FRAMES_PER_INTERVAL;
+				undoLast = undoFirst + TimeState.FRAMES_PER_INTERVAL;
+				lastFrameUndoed = undoLast;
+				
+				while (paradoxEntities.length)
+				{
+					var e:TimeEntity = paradoxEntities.pop();
+					e.inParadox = false;
+					fxLayer.entities.remove(e);
+				}
+			}
+		}
+		
 		public function playerReachedGoal():void
 		{
 			SaveState.levelComplete(id, curFrameIndex);
@@ -771,9 +838,14 @@ package
 			// TODO: Fix noise/scanlines
 			scanlines.applyTo(FP.buffer, gameAreaRect);
 			
-			gameBorder.render(FP.buffer, gameBorderPoint, FP.camera);
+			//gameBorder.render(FP.buffer, gameBorderPoint, FP.camera);
 			
 			infoBox.render();
+			
+			if (paused)
+			{
+				Draw.rect(camera.x, camera.y, 400, 600, 0xFFFFFF, 0.4);
+			}
 			
 			//Draw.text(curFrameIndex.toString(), 2, 2);
 			

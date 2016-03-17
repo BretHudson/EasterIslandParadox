@@ -24,6 +24,15 @@ package
 				levelsCompleted = id;
 			}
 			
+			if (id == 4)
+			{
+				Main.idi.idnet.achievementsSave(IDI.achievement1Name, IDI.achievement1Key, '');
+			}
+			else if (id == 8)
+			{
+				Main.idi.idnet.achievementsSave(IDI.achievement2Name, IDI.achievement2Key, '');
+			}
+			
 			submitTime(id - 1, frameCount);
 		}
 		

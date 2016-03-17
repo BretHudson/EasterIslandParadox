@@ -11,16 +11,14 @@ package
 	{
 		
 		// Achievements
-		public static var achievementOneName:String = 'One';
-		public static var achievementOneKey:String = 'b8ae81614151ec4e903a';
-		public static var achievementTwoName:String = 'Two';
-		public static var achievementTwoKey:String = '52dfe3fa13f64b432ca1';
-		public static var achievementThreeName:String = 'THREE';
-		public static var achievementThreeKey:String = 'ede426942c1e3f8ad586';
+		public static var achievement1Name:String = 'Halfway There';
+		public static var achievement1Key:String = '0a20fafa8f68bef57bb4';
+		public static var achievement2Name:String = 'Complete';
+		public static var achievement2Key:String = '3d04eef769f3ec0a5bb5';
 		
 		// Default
 		public var idnet;
-		private var appID:String = '56e6f7a2bbddbd6b5d001127';// your application id
+		private var appID:String = '56e9ef70d55930402f0048cb';// your application id
 		private var verbose:Boolean = true;// display idnet messages
 		private var showPreloader:Boolean = false;// Display Traffic Flux preloader ad
 		private var protection:Boolean = false;// Enable information about sites that block links

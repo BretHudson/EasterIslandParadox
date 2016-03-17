@@ -1,10 +1,12 @@
 package 
 {
 	import flash.events.Event;
+	import menus.Button;
 	import menus.LevelSelect;
 	import menus.Menu;
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
+	import net.flashpunk.World;
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
@@ -40,7 +42,10 @@ package
 			FP.screen.scale = scale;
 			FP.screen.color = 0x202020;
 			
-			FP.console.enable();
+			CONFIG::debug
+			{
+				FP.console.enable();
+			}
 			
 			Text.font = "04B25";
 			Text.size = 12;
@@ -58,6 +63,8 @@ package
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
 			FP.world = new Splash();
+			
+			//FP.world = new Level(Assets.LEVEL2, 0);
 		}
 		
 		private var loggedIn:Boolean = false;
@@ -87,6 +94,29 @@ package
 			super.update();
 		}
 		
+		public static function addIconsToWorld(world:World, x:int, y:int, tint:uint, hoverTint:uint, pause:Boolean, mute:Boolean, help:Boolean):void
+		{
+			var offset:int = 24;
+			
+			if (help)
+			{
+				x -= offset;
+				world.add(new Button(x, y, 2, tint, hoverTint));
+			}
+			
+			if (mute)
+			{
+				x -= offset;
+				world.add(new Button(x, y, 1, tint, hoverTint));
+			}
+			
+			if (pause)
+			{
+				x -= offset;
+				world.add(new Button(x, y, 0, tint, hoverTint));
+			}
+		}
+		
 		private function defineControls():void
 		{
 			// Directional keys
@@ -101,7 +131,7 @@ package
 			Input.define("jump", Key.UP, Key.W, Key.Z, Key.X, Key.SPACE);
 			
 			Input.define("pause", Key.P);
-			Input.define("mute", Key.M);
+			//Input.define("mute", Key.M);
 			
 			Input.define("undo", Key.BACKSPACE);
 		}

@@ -74,6 +74,9 @@ package
 		[Embed(source = "assets/gfx/buttons.png")]
 		public static const BUTTONS:Class;
 		
+		[Embed(source = "assets/gfx/idnet.png")]
+		public static const IDNETLOGO:Class;
+		
 		
 		
 		// Level Preview Images
@@ -97,6 +100,9 @@ package
 		
 		[Embed(source = "assets/gfx/level_previews/level7.png")]
 		public static const LEVEL7PREVIEW:Class;
+		
+		[Embed(source = "assets/gfx/level_previews/level8.png")]
+		public static const LEVEL8PREVIEW:Class;
 		
 		public static const NUMLEVELS:int = 7;
 		
@@ -133,6 +139,9 @@ package
 		
 		[Embed(source = "assets/ogmo/levelCrateParadox.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL7:Class;
+		
+		[Embed(source = "assets/ogmo/blockslwvwl.oel", mimeType = "application/octet-stream")]
+		public static const LEVEL8:Class;
 		
 		
 		

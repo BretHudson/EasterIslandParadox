@@ -32,7 +32,7 @@ package
 		private static const maxVolume:Number = 0.5;
 		private static var _volume:Number = 1.0;
 		private static var _lastVolume:Number = 1.0;
-		private static var mute:Boolean = false;
+		public static var mute:Boolean = false;
 		
 		public static function get volume():Number { return _volume * maxVolume; }
 		public static function set volume(value:Number):void
