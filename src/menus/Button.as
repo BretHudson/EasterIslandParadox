@@ -2,6 +2,8 @@ package menus
 {
 	import flash.ui.MouseCursor;
 	import net.flashpunk.Entity;
+	import net.flashpunk.graphics.Graphiclist;
+	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Input;
 	
@@ -17,19 +19,30 @@ package menus
 		private var tint:uint;
 		private var hoverTint:uint;
 		
+		public var helpImage:Image;
+		
 		public function Button(x:int, y:int, button:int, tint:uint, hoverTint:uint) 
 		{
 			super(x, y);
 			
 			buttonID = button;
 			
-			trace("BUTTON", button);
-			
 			sprite = new Spritemap(Assets.BUTTONS, 16, 16);
 			sprite.add("frame", [button], 1);
 			sprite.play("frame");
 			sprite.color = tint;
 			graphic = sprite;
+			
+			if (button == HELP)
+			{
+				helpImage = new Image(Assets.HOWTOPLAY)
+				helpImage.relative = false;
+				helpImage.x = 200;
+				helpImage.y = 150;
+				helpImage.centerOO();
+				helpImage.alpha = 0;
+				graphic = new Graphiclist(sprite, helpImage);
+			}
 			
 			this.tint = tint;
 			this.hoverTint = hoverTint;
@@ -41,6 +54,17 @@ package menus
 		
 		override public function update():void 
 		{
+			if (helpImage)
+			{
+				helpImage.x = 200 + world.camera.x;
+				helpImage.y = 150 + world.camera.y;
+			}
+			
+			if ((Input.mousePressed) && (helpImage) && (helpImage.alpha == 1))
+			{
+				helpImage.alpha = 0;
+			}
+			
 			if (collidePoint(x, y, Input.mouseX + world.camera.x, Input.mouseY + world.camera.y))
 			{
 				sprite.color = hoverTint;
@@ -57,7 +81,7 @@ package menus
 							MusicManager.toggleMute();
 							break;
 						case HELP:
-							// TODO:
+							helpImage.alpha = 1 - helpImage.alpha;
 							break;
 					}
 				}

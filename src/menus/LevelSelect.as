@@ -51,8 +51,10 @@ package menus
 			button.setHitbox(buttonImg.width + 1, buttonImg.height);
 			button.centerOrigin();
 			
-			Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0xFFFFFF, 0x01FF78, false, true, false);
+			helpButton = Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0xFFFFFF, 0x01FF78, false, true, true);
 		}
+		
+		private var helpButton:Button;
 		
 		override public function add(e:Entity):Entity 
 		{
@@ -80,12 +82,18 @@ package menus
 		{
 			Input.mouseCursor = MouseCursor.ARROW;
 			
-			if (Main.idi.idnet)
+			if ((Main.idi) && (Main.idi.idnet))
 			{
 				if (Main.idi.idnet.InterfaceOpen())
 				{
 					return;
 				}
+			}
+			
+			if ((helpButton) && (helpButton.helpImage.alpha == 1))
+			{
+				helpButton.update();
+				return;
 			}
 			
 			super.update();

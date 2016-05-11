@@ -21,13 +21,13 @@ package
 		private static var world1Tween:NumTween;
 		public static const WORLD1:int = 2;
 		
-		private static var world2:Sfx = new Sfx(Assets.WORLD2);
+		/*private static var world2:Sfx = new Sfx(Assets.WORLD2);
 		private static var world2Tween:NumTween;
 		public static const WORLD2:int = 2;
 		
 		private static var world3:Sfx = new Sfx(Assets.WORLD3);
 		private static var world3Tween:NumTween;
-		public static const WORLD3:int = 2;
+		public static const WORLD3:int = 2;*/
 		
 		private static const maxVolume:Number = 0.5;
 		private static var _volume:Number = 1.0;
@@ -121,13 +121,13 @@ package
 			world1Tween.tween(0, 0, 0);
 			world1Tween.value = 0;
 			
-			world2Tween = new NumTween();
+			/*world2Tween = new NumTween();
 			world2Tween.tween(0, 0, 0);
 			world2Tween.value = 0;
 			
 			world3Tween = new NumTween();
 			world3Tween.tween(0, 0, 0);
-			world3Tween.value = 0;
+			world3Tween.value = 0;*/
 			
 			// TODO: Adjust volumes
 			
@@ -170,7 +170,7 @@ package
 			if (world1.volume == 0) world1.stop();
 			else if (!world1.playing) world1.loop();
 			
-			world2Tween.update();
+			/*world2Tween.update();
 			world2.volume = world2Tween.value * _volume;
 			if (world2.volume == 0) world2.stop();
 			else if (!world2.playing) world2.loop();
@@ -178,7 +178,7 @@ package
 			world3Tween.update();
 			world3.volume = world3Tween.value * _volume;
 			if (world3.volume == 0) world3.stop();
-			else if (!world3.playing) world3.loop();
+			else if (!world3.playing) world3.loop();*/
 			
 			/*FP.console.log("Volume", volume,
 			"Menu", menu.playing, menu.volume, menuTween.value,

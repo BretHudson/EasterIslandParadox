@@ -8,6 +8,7 @@ package timeentities
 	import net.flashpunk.masks.Pixelmask;
 	import net.flashpunk.utils.Draw;
 	import net.flashpunk.utils.Input;
+	import net.flashpunk.utils.Key;
 	/**
 	 * ...
 	 * @author Bret Hudson
@@ -284,6 +285,13 @@ package timeentities
 			}
 			else
 				deadCount = -1;
+			
+			
+			if (Input.pressed(Key.T))
+			{
+				trace ("DIE PLEASE");
+				die();
+			}
 		}
 		
 		public function die(fromDoor:Boolean = false):void

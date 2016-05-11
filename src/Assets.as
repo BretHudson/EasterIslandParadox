@@ -80,6 +80,9 @@ package
 		[Embed(source = "assets/gfx/achievements-button.png")]
 		public static const ACHIEVEMENTS_BUTTON:Class;
 		
+		[Embed(source = "assets/gfx/how_to_play.png")]
+		public static const HOWTOPLAY:Class;
+		
 		
 		
 		// Level Preview Images
@@ -155,14 +158,14 @@ package
 		[Embed(source = "assets/music/Level Select.mp3")]
 		public static const LEVELSELECT:Class;
 		
-		[Embed(source = "assets/music/Here's to Hope (World 1).mp3")]
-		public static const WORLD2:Class;
+		/*[Embed(source = "assets/music/Here's to Hope (World 1).mp3")]
+		public static const WORLD2:Class;*/
 		
 		[Embed(source = "assets/music/Interesting Islands (World 2).mp3")]
 		public static const WORLD1:Class;
 		
-		[Embed(source = "assets/music/Moai Mystery (World 3).mp3")]
-		public static const WORLD3:Class;
+		/*[Embed(source = "assets/music/Moai Mystery (World 3).mp3")]
+		public static const WORLD3:Class;*/
 		
 		
 		

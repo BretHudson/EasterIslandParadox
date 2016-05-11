@@ -22,8 +22,6 @@ package timeentities
 		{
 			super(x, y, numIntervals);
 			
-			// TODO: Put other things here!
-			
 			sprite = new Image(Assets.CRATE);
 			sprites.add(sprite);
 			
@@ -38,8 +36,8 @@ package timeentities
 		
 		override public function update():void 
 		{
-			yspeed += Player.gspeed;
 			checkFalling();
+			yspeed += Player.gspeed;
 			
 			if (exists < EXISTNUM)
 			{
@@ -112,8 +110,8 @@ package timeentities
 			
 			if (states.length > NUM_BASE_STATES)
 			{
-				if (!states[STATE_EXISTS].recordNumber(frame, exists))	success = false;
-				if (!states[STATE_YSPEED].recordNumber(frame, yspeed))	success = false;
+				if (!states[STATE_EXISTS].recordInt(frame, exists))	success = false;
+				if (!states[STATE_YSPEED].recordInt(frame, yspeed))	success = false;
 			}
 			
 			return success;

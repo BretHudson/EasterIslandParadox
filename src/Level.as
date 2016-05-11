@@ -5,6 +5,7 @@ package
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.MouseCursor;
+	import menus.Button;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.TiledImage;
@@ -145,8 +146,10 @@ package
 			cloud_x_start %= 640;
 			cloud_x_start *= -1;
 			
-			Main.addIconsToWorld(this, 400 - 40, -20, 0x000000, 0x01FF78, true, true, false);
+			helpButton = Main.addIconsToWorld(this, 400 - 40, -20, 0x000000, 0x01FF78, true, true, true);
 		}
+		
+		private var helpButton:Button;
 		
 		private function loadFromOgmo(ogmoLevel:Class):void
 		{
@@ -241,12 +244,10 @@ package
 			// Goal
 			for each (node in ogmoXML.Entities.Goal)
 			{
-				trace("GOAL");
 				add(new Goal(ogmoXML.Entities.Goal.@x, ogmoXML.Entities.Goal.@y, numIntervals));
 			}
 			for each (node in ogmoXML.Entities.GoalOffset)
 			{
-				trace("GOAL OFFFSET");
 				add(new Goal(int(ogmoXML.Entities.GoalOffset.@x) + 8, ogmoXML.Entities.GoalOffset.@y, numIntervals));
 			}
 			
@@ -490,6 +491,12 @@ package
 				return;
 			}
 			
+			if ((helpButton) && (helpButton.helpImage.alpha == 1))
+			{
+				helpButton.update();
+				return;
+			}
+			
 			if ((Main.idi.idnet) && (Main.idi.idnet.InterfaceOpen()))
 			{
 				return;
@@ -602,11 +609,14 @@ package
 			
 			if (Input.pressed("undo"))
 			{
+				// TODO: Figure out where we are in the current thing
 				if (intervalsEntered.length > 0)
 				{
 					state = STATE_UNDO;
 					undoFirst = intervalsEntered[intervalsEntered.length - 1] * TimeState.FRAMES_PER_INTERVAL;
+					
 					undoLast = undoFirst + TimeState.FRAMES_PER_INTERVAL;
+					
 					lastFrameUndoed = undoLast;
 				}
 			}
@@ -741,9 +751,21 @@ package
 		{
 			if (Input.pressed("undo"))
 			{
+				/*//--curFrame;
+				//--curFrameIndex;
+				
+				state = STATE_UNDO;
+				undoFirst = curInterval * TimeState.FRAMES_PER_INTERVAL;
+				undoLast = curFrame;
+				lastFrameUndoed = undoLast;
+				setAllEntitiesActive(false);
+				return;*/
+				
+				
+				
 				state = STATE_UNDO;
 				undoFirst = intervalsEntered[intervalsEntered.length - 1] * TimeState.FRAMES_PER_INTERVAL;
-				undoLast = undoFirst + TimeState.FRAMES_PER_INTERVAL;
+				undoLast = curFrame;
 				lastFrameUndoed = undoLast;
 				
 				while (paradoxEntities.length)
@@ -836,7 +858,8 @@ package
 			//Draw.text("Current Frame: " + curFrame + " " + curFrameIndex, 4, 4);
 			
 			// TODO: Fix noise/scanlines
-			scanlines.applyTo(FP.buffer, gameAreaRect);
+			if ((!helpButton) || (helpButton.helpImage.alpha == 0))
+				scanlines.applyTo(FP.buffer, gameAreaRect);
 			
 			//gameBorder.render(FP.buffer, gameBorderPoint, FP.camera);
 			

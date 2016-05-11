@@ -24,7 +24,7 @@ package
 				levelsCompleted = id;
 			}
 			
-			if (Main.idi.idnet)
+			if ((Main.idi) && (Main.idi.idnet))
 			{
 				if (id == 4)
 				{
@@ -46,7 +46,7 @@ package
 		
 		private static function submitTime(id:int, frameCount:int):void
 		{
-			if (Main.idi.idnet)
+			if ((Main.idi) && (Main.idi.idnet))
 			{
 				var score:Number = Number(frameCount) / 60.0;
 				fastestTimes[id] = score;

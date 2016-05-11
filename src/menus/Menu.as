@@ -62,13 +62,15 @@ package menus
 			logo.x = 200;
 			logo.y = 65;
 			
-			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0.2", 200, 283);
+			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0.3", 200, 283);
 			text.size = 16;
 			text.centerOO();
 			addGraphic(text);
 			
-			Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0x000000, 0xFFFFFF, false, true, false);
+			helpButton = Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0x000000, 0xFFFFFF, false, true, false);
 		}
+		
+		private var helpButton:Button;
 		
 		override public function begin():void 
 		{
@@ -97,7 +99,7 @@ package menus
 			
 			idLogo.color = 0xDDDDDD;
 			
-			if (Main.idi.idnet)
+			if ((Main.idi) && (Main.idi.idnet))
 			{
 				if (Main.idi.idnet.isLoggedIn)
 				{
@@ -112,6 +114,11 @@ package menus
 				{
 					return;
 				}
+			}
+			
+			if ((helpButton) && (helpButton.helpImage.alpha == 1))
+			{
+				return;
 			}
 			
 			if (play.collidePoint(play.x, play.y, Input.mouseX, Input.mouseY))
@@ -137,7 +144,7 @@ package menus
 				
 				if (Input.mousePressed)
 				{
-					if (Main.idi.idnet)
+					if ((Main.idi) && (Main.idi.idnet))
 					{
 						if (Main.idi.idnet.isLoggedIn)
 							Main.idi.idnet.logout();

@@ -58,7 +58,7 @@ package
 			defineControls();
 			
 			idi = new IDI();
-			addChild(idi);
+			//addChild(idi);
 			
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
@@ -96,14 +96,16 @@ package
 			super.update();
 		}
 		
-		public static function addIconsToWorld(world:World, x:int, y:int, tint:uint, hoverTint:uint, pause:Boolean, mute:Boolean, help:Boolean):void
+		public static function addIconsToWorld(world:World, x:int, y:int, tint:uint, hoverTint:uint, pause:Boolean, mute:Boolean, help:Boolean):Button
 		{
 			var offset:int = 24;
+			
+			var helpButton:Button;
 			
 			if (help)
 			{
 				x -= offset;
-				world.add(new Button(x, y, 2, tint, hoverTint));
+				helpButton = world.add(new Button(x, y, 2, tint, hoverTint)) as Button;
 			}
 			
 			if (mute)
@@ -117,6 +119,8 @@ package
 				x -= offset;
 				world.add(new Button(x, y, 0, tint, hoverTint));
 			}
+			
+			return helpButton;
 		}
 		
 		private function defineControls():void

@@ -35,11 +35,6 @@
     <Solid id="21" x="336" y="160" width="16" height="16" />
     <Solid id="22" x="336" y="160" width="16" height="16" />
     <MissileLauncher id="23" x="48" y="48" />
-    <Crate id="24" x="112" y="144" />
-    <Crate id="25" x="112" y="128" />
-    <Crate id="26" x="112" y="112" />
-    <Crate id="27" x="112" y="96" />
-    <Crate id="28" x="112" y="80" />
     <Solid id="31" x="160" y="80" width="16" height="16" />
     <Solid id="32" x="176" y="64" width="16" height="16" />
     <Solid id="33" x="192" y="48" width="16" height="16" />
@@ -71,8 +66,6 @@
     <Solid id="60" x="16" y="144" width="16" height="16" />
     <SlopeLeft id="63" x="32" y="128" />
     <Player id="65" x="16" y="112" />
-    <Crate id="66" x="112" y="64" />
-    <Crate id="67" x="112" y="48" />
     <Solid id="29" x="224" y="144" width="16" height="16" />
     <Solid id="69" x="240" y="144" width="16" height="16" />
     <Solid id="70" x="240" y="128" width="16" height="16" />
@@ -96,6 +89,13 @@
     <Solid id="82" x="32" y="0" width="16" height="16" />
     <Solid id="83" x="16" y="0" width="16" height="16" />
     <Solid id="84" x="0" y="0" width="16" height="16" />
+    <Crate id="24" x="112" y="144" />
+    <Crate id="25" x="112" y="128" />
+    <Crate id="26" x="112" y="112" />
+    <Crate id="27" x="112" y="96" />
+    <Crate id="28" x="112" y="80" />
+    <Crate id="66" x="112" y="64" />
+    <Crate id="67" x="112" y="48" />
   </Entities>
   <Tilemap tileset="Tilemap 1" exportMode="CSV">-1,-1,-1,189,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 204,215,198,-1,186,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
