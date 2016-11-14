@@ -22,6 +22,8 @@ package timeentities
 		{
 			super(x, y, numIntervals);
 			
+			// TODO: Put other things here!
+			
 			sprite = new Image(Assets.CRATE);
 			sprites.add(sprite);
 			
@@ -73,13 +75,24 @@ package timeentities
 		public function move(xmove:int):Boolean
 		{
 			if (collide("solid", x + xmove, y))
-				return false;
+			{
+				if (!collideWithSolidY(y - 1))
+					--y;
+				else
+					return false;
+			}
 			
 			var crate:Crate = collide("crate", x + xmove, y) as Crate;
 			if ((crate) && (!crate.move(xmove)))
 				return false;
 			
 			x += xmove;
+			// TODO: Finish shitty implementation of crates on slopes
+			/*if (collideWithSolidY(y + 2))
+			{
+				if (!collideWithSolidY(y + 1))
+					++y;
+			}*/
 			
 			yspeed += Player.gspeed;
 			checkFalling();
