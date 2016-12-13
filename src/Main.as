@@ -31,8 +31,6 @@ package
 		
 		private var scale:int = 2;
 		
-		public static var idi:IDI;
-		
 		public static var mainmenu:Menu;
 		public static var levelSelect:LevelSelect;
 		
@@ -57,33 +55,15 @@ package
 			
 			defineControls();
 			
-			idi = new IDI();
-			//addChild(idi);
-			
 			mainmenu = new Menu();
 			levelSelect = new LevelSelect();
 			FP.world = new Splash();
-			
-			//FP.world = new Level(Assets.LEVEL2, 0);
 		}
 		
-		private var loggedIn:Boolean = false;
 		private var listenersActivated:Boolean = false;
 		
 		override public function update():void 
 		{
-			if ((!loggedIn) && (idi) && (idi.idnet))
-			{
-				//idi.idnet.autoLogin();
-				
-				loggedIn = true;
-				//idi.idnet.toggleInterface('registration');
-				
-				//idi.idnet.achievementsSave(IDI.achievementThreeName, IDI.achievementThreeKey, '');
-				//var achList:* = idi.idnet.achievementsList();
-				//FP.console.log("GOT LIST");
-			}
-			
 			if ((!listenersActivated) && (stage))
 			{
 				stage.addEventListener(Event.ACTIVATE, onActivate);

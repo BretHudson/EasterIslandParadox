@@ -43,13 +43,13 @@ package menus
 			text.y = 80;
 			addGraphic(text);
 			
-			var buttonImg:Image = new Image(Assets.ACHIEVEMENTS_BUTTON);
+			/*var buttonImg:Image = new Image(Assets.ACHIEVEMENTS_BUTTON);
 			buttonImg.centerOO();
 			button = addGraphic(buttonImg);
 			button.x = 200;
 			button.y = 265;
 			button.setHitbox(buttonImg.width + 1, buttonImg.height);
-			button.centerOrigin();
+			button.centerOrigin();*/
 			
 			helpButton = Main.addIconsToWorld(this, 400 - 40 + 24 + 12, 8, 0xFFFFFF, 0x01FF78, false, true, true);
 		}
@@ -82,14 +82,6 @@ package menus
 		{
 			Input.mouseCursor = MouseCursor.ARROW;
 			
-			if ((Main.idi) && (Main.idi.idnet))
-			{
-				if (Main.idi.idnet.InterfaceOpen())
-				{
-					return;
-				}
-			}
-			
 			if ((helpButton) && (helpButton.helpImage.alpha == 1))
 			{
 				helpButton.update();
@@ -111,22 +103,14 @@ package menus
 				FP.world = Main.mainmenu;
 			}
 			
-			Image(button.graphic).color = 0xDDDDDD;
+			/*Image(button.graphic).color = 0xDDDDDD;
 			
 			if (button.collidePoint(button.x, button.y, Input.mouseX, Input.mouseY))
 			{
 				Input.mouseCursor = MouseCursor.BUTTON;
 				
 				Image(button.graphic).color = 0xFFFFFF;
-				
-				if (Input.mousePressed)
-				{
-					if (Main.idi.idnet)
-					{
-						Main.idi.idnet.toggleInterface("achievements");
-					}
-				}
-			}
+			}*/
 		}
 		
 	}

@@ -20,11 +20,7 @@ package menus
 		private var islands:Image;
 		private var logo:Image;
 		
-		private var idLogo:Image;
-		private var idnetLogo:Entity;
-		
 		private var text:Text;
-		private var loginText:Text;
 		
 		private var playText:Text;
 		private var play:Entity;
@@ -46,23 +42,11 @@ package menus
 			play.y = 158;
 			play.setHitbox(playText.width, playText.height, playText.width * 0.5, playText.height * 0.5);
 			
-			idLogo = new Image(Assets.IDNETLOGO);
-			idLogo.centerOO();
-			idnetLogo = addGraphic(idLogo);
-			idnetLogo.setHitbox(idLogo.width, idLogo.height, idLogo.width * 0.5, 13);
-			idnetLogo.x = 200;
-			idnetLogo.y = 249;// (300 - idLogo.height) - 10;
-			
-			loginText = new Text(" Loading...", 138, 244);
-			loginText.size = 16;
-			loginText.color = 0x000000;
-			addGraphic(loginText);
-			
 			logo.centerOO();
 			logo.x = 200;
 			logo.y = 65;
 			
-			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0.3", 200, 283);
+			text = new Text("Bret Hudson / Jared Cohen / Mike LeRoy         v1.0.4 (Demo)", 200, 283);
 			text.size = 16;
 			text.centerOO();
 			addGraphic(text);
@@ -97,25 +81,6 @@ package menus
 			if (cloudsBack.x < -400) cloudsBack.x += 400;
 			if (cloudsFront.x < -400) cloudsFront.x += 400;
 			
-			idLogo.color = 0xDDDDDD;
-			
-			if ((Main.idi) && (Main.idi.idnet))
-			{
-				if (Main.idi.idnet.isLoggedIn)
-				{
-					loginText.text = "   Log out";
-				}
-				else
-				{
-					loginText.text = "Login with";
-				}
-				
-				if (Main.idi.idnet.InterfaceOpen())
-				{
-					return;
-				}
-			}
-			
 			if ((helpButton) && (helpButton.helpImage.alpha == 1))
 			{
 				return;
@@ -134,24 +99,6 @@ package menus
 			else
 			{
 				playText.color = 0x284239;
-			}
-			
-			if (idnetLogo.collidePoint(idnetLogo.x, idnetLogo.y, Input.mouseX, Input.mouseY))
-			{
-				Input.mouseCursor = MouseCursor.BUTTON;
-				
-				idLogo.color = 0xFFFFFF;
-				
-				if (Input.mousePressed)
-				{
-					if ((Main.idi) && (Main.idi.idnet))
-					{
-						if (Main.idi.idnet.isLoggedIn)
-							Main.idi.idnet.logout();
-						else
-							Main.idi.idnet.toggleInterface('registration');
-					}
-				}
 			}
 			
 			if (Input.pressed("enter"))

@@ -497,11 +497,6 @@ package
 				return;
 			}
 			
-			if ((Main.idi.idnet) && (Main.idi.idnet.InterfaceOpen()))
-			{
-				return;
-			}
-			
 			super.update();
 			
 			switch (state)
