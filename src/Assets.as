@@ -146,7 +146,7 @@ package
 		[Embed(source = "assets/ogmo/levelCrateParadox.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL7:Class;
 		
-		[Embed(source = "assets/ogmo/blockslwvwl.oel", mimeType = "application/octet-stream")]
+		[Embed(source = "assets/ogmo/blockslwvwl - Copy.oel", mimeType = "application/octet-stream")]
 		public static const LEVEL8:Class;
 		
 		

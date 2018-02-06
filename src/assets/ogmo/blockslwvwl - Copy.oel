@@ -1,0 +1,124 @@
+<level width="352" height="176" intervals="2">
+  <BGlayer tileset="Tilemap 1" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+184,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,196,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+214,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,-1,-1,16,16,16,16,16,16,16,16,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,-1,-1,16,16,16,16,16,16,16,16,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,184,16,16,16,16,-1,16,16,16,16,16,16,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,16,16,16,16,-1,16,16,16,16,16,16,-1,-1,-1,-1,-1,-1,-1,-1,-1
+-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1</BGlayer>
+  <Entities>
+    <Solid id="0" x="0" y="160" width="16" height="16" />
+    <Solid id="1" x="32" y="160" width="16" height="16" />
+    <Solid id="2" x="32" y="160" width="16" height="16" />
+    <Solid id="3" x="48" y="160" width="16" height="16" />
+    <Solid id="4" x="16" y="160" width="16" height="16" />
+    <Solid id="5" x="64" y="160" width="16" height="16" />
+    <Solid id="6" x="96" y="160" width="16" height="16" />
+    <Solid id="7" x="144" y="160" width="16" height="16" />
+    <Solid id="8" x="224" y="160" width="16" height="16" />
+    <Solid id="9" x="272" y="160" width="16" height="16" />
+    <Solid id="10" x="320" y="160" width="16" height="16" />
+    <Solid id="11" x="336" y="160" width="16" height="16" />
+    <Solid id="12" x="336" y="160" width="16" height="16" />
+    <Solid id="13" x="304" y="160" width="16" height="16" />
+    <Solid id="14" x="304" y="160" width="16" height="16" />
+    <Solid id="15" x="288" y="160" width="16" height="16" />
+    <Solid id="16" x="256" y="160" width="16" height="16" />
+    <Solid id="17" x="240" y="160" width="16" height="16" />
+    <Solid id="18" x="208" y="160" width="16" height="16" />
+    <Solid id="19" x="192" y="160" width="16" height="16" />
+    <Solid id="20" x="160" y="160" width="16" height="16" />
+    <Solid id="21" x="176" y="160" width="16" height="16" />
+    <Solid id="22" x="128" y="160" width="16" height="16" />
+    <Solid id="23" x="112" y="160" width="16" height="16" />
+    <Solid id="24" x="80" y="160" width="16" height="16" />
+    <Solid id="48" x="16" y="144" width="16" height="16" />
+    <Solid id="49" x="0" y="144" width="16" height="16" />
+    <SlopeLeft id="50" x="32" y="144" />
+    <Solid id="52" x="48" y="112" width="16" height="16" />
+    <SlopeRight id="53" x="48" y="96" />
+    <Solid id="54" x="64" y="112" width="16" height="16" />
+    <Solid id="55" x="64" y="96" width="16" height="16" />
+    <Solid id="66" x="64" y="112" width="16" height="16" />
+    <Solid id="67" x="64" y="96" width="16" height="16" />
+    <Solid id="68" x="0" y="64" width="16" height="16" />
+    <Solid id="69" x="16" y="64" width="16" height="16" />
+    <SlopeLeft id="70" x="16" y="48" />
+    <Solid id="71" x="0" y="48" width="16" height="16" />
+    <Solid id="73" x="80" y="80" width="16" height="16" />
+    <Solid id="74" x="96" y="80" width="16" height="16" />
+    <Solid id="75" x="96" y="80" width="16" height="16" />
+    <Solid id="76" x="112" y="80" width="16" height="16" />
+    <Solid id="77" x="128" y="80" width="16" height="16" />
+    <Solid id="78" x="144" y="80" width="16" height="16" />
+    <Solid id="79" x="160" y="80" width="16" height="16" />
+    <Solid id="82" x="64" y="32" width="16" height="16" />
+    <Solid id="83" x="96" y="32" width="16" height="16" />
+    <Solid id="84" x="96" y="32" width="16" height="16" />
+    <Solid id="85" x="80" y="32" width="16" height="16" />
+    <Solid id="86" x="112" y="32" width="16" height="16" />
+    <Solid id="87" x="128" y="32" width="16" height="16" />
+    <Solid id="88" x="144" y="32" width="16" height="16" />
+    <Solid id="89" x="160" y="32" width="16" height="16" />
+    <Crate id="90" x="128" y="16" />
+    <Crate id="91" x="96" y="64" />
+    <Crate id="81" x="144" y="64" />
+    <Player id="92" x="96" y="128" />
+    <Solid id="31" x="304" y="16" width="16" height="16" />
+    <Solid id="32" x="304" y="0" width="16" height="16" />
+    <Solid id="33" x="320" y="0" width="16" height="16" />
+    <Solid id="34" x="336" y="0" width="16" height="16" />
+    <Solid id="35" x="176" y="80" width="16" height="16" />
+    <Solid id="40" x="176" y="32" width="16" height="16" />
+    <SlopeRight id="36" x="64" y="80" />
+    <Solid id="37" x="32" y="112" width="16" height="16" />
+    <Solid id="25" x="320" y="96" width="16" height="16" />
+    <Solid id="26" x="304" y="96" width="16" height="16" />
+    <Solid id="27" x="288" y="96" width="16" height="16" />
+    <Solid id="28" x="304" y="112" width="16" height="16" />
+    <Solid id="29" x="320" y="112" width="16" height="16" />
+    <Solid id="30" x="320" y="128" width="16" height="16" />
+    <Solid id="38" x="320" y="144" width="16" height="16" />
+    <Solid id="39" x="320" y="160" width="16" height="16" />
+    <Crate id="42" x="240" y="144" />
+    <Crate id="43" x="224" y="144" />
+    <Crate id="44" x="208" y="144" />
+    <Crate id="45" x="192" y="144" />
+    <Solid id="46" x="192" y="32" width="16" height="16" />
+    <Solid id="47" x="192" y="32" width="16" height="16" />
+    <Solid id="51" x="208" y="32" width="16" height="16" />
+    <Solid id="41" x="256" y="48" width="16" height="16" />
+    <Solid id="56" x="272" y="48" width="16" height="16" />
+    <Solid id="57" x="272" y="32" width="16" height="16" />
+    <Solid id="58" x="288" y="32" width="16" height="16" />
+    <Solid id="59" x="288" y="48" width="16" height="16" />
+    <Solid id="60" x="304" y="48" width="16" height="16" />
+    <Solid id="61" x="304" y="32" width="16" height="16" />
+    <Solid id="62" x="320" y="32" width="16" height="16" />
+    <Solid id="63" x="320" y="48" width="16" height="16" />
+    <Solid id="64" x="320" y="16" width="16" height="16" />
+    <Solid id="65" x="336" y="32" width="16" height="16" />
+    <Solid id="72" x="336" y="16" width="16" height="16" />
+    <Solid id="80" x="192" y="80" width="16" height="16" />
+    <Goal id="93" x="320" y="80" />
+    <Solid id="94" x="336" y="96" width="16" height="16" />
+    <Solid id="95" x="336" y="112" width="16" height="16" />
+    <Solid id="96" x="336" y="128" width="16" height="16" />
+    <Solid id="97" x="336" y="144" width="16" height="16" />
+  </Entities>
+  <Tilemap tileset="Tilemap 1" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,58,58,58
+-1,-1,-1,-1,6,-1,185,-1,-1,-1,185,-1,-1,-1,-1,-1,-1,185,4,58,58,58
+-1,-1,-1,206,57,57,48,47,58,57,48,47,57,47,186,-1,206,48,47,58,58,58
+48,254,-1,-1,-1,-1,-1,215,-1,-1,-1,215,-1,-1,-1,-1,57,58,58,58,58,188
+58,58,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,214,-1,-1,215,-1
+-1,-1,-1,-1,253,47,58,48,57,58,48,48,47,-1,-1,-1,-1,-1,184,-1,185,-1
+14,15,-1,253,58,188,-1,-1,0,1,-1,-1,-1,-1,-1,-1,-1,-1,48,47,48,48
+24,25,47,58,58,-1,-1,-1,10,11,-1,-1,-1,-1,-1,-1,-1,-1,-1,58,58,58
+34,35,-1,-1,-1,-1,-1,-1,20,21,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,58,58
+47,48,254,-1,-1,6,-1,-1,223,225,-1,-1,-1,-1,-1,-1,-1,184,185,4,58,58
+58,58,58,47,48,57,47,47,57,48,57,48,58,58,58,58,47,57,48,57,58,58</Tilemap>
+</level>
